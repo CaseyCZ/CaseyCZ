@@ -25,8 +25,10 @@
 <h3 align="left">Support:</h3>
 <p><a href="https://www.buymeacoffee.com/buy me a coffe"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="buy me a coffe" /></a></p><br><br>
 
-<p>&nbsp;<img align="left" src="https://github-readme-stats.vercel.app/api?username=caseycz&show_icons=true&theme=highcontrast&locale=cs" alt="caseycz" /></p>
+<br />
+
+[![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=CaseyCZ&locale=cs&layout=compact&theme=vision-friendly-dark)](https://github.com/anuraghazra/github-readme-stats)
+
+![GitHub Stats](https://github-readme-stats.vercel.app/api?username=caseycz&show_icons=true&theme=highcontrast&locale=cs)
 
 [![GitHub Streak](http://github-readme-streak-stats.herokuapp.com?user=CaseyCZ&locale=cs&theme=dark&background=000000)](https://git.io/streak-stats)
-
-[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=CaseyCZ&locale=cs&layout=compact&theme=vision-friendly-dark)](https://github.com/anuraghazra/github-readme-stats)

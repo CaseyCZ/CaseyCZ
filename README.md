@@ -25,8 +25,8 @@
 <h3 align="left">Support:</h3>
 <p><a href="https://www.buymeacoffee.com/buy me a coffe"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="buy me a coffe" /></a></p><br><br>
 
-<p><img align="left" src="https://github-readme-stats.vercel.app/api/top-langs?username=caseycz&show_icons=true&locale=en&layout=compact" alt="caseycz" /></p>
+<p>&nbsp;<img align="left" src="https://github-readme-stats.vercel.app/api?username=caseycz&show_icons=true&theme=highcontrast&locale=cs" alt="caseycz" /></p>
 
-<p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=caseycz&show_icons=true&locale=en" alt="caseycz" /></p>
+[![GitHub Streak](http://github-readme-streak-stats.herokuapp.com?user=CaseyCZ&locale=cs&theme=dark&background=000000)](https://git.io/streak-stats)
 
-<p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=caseycz&" alt="caseycz" /></p>
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=CaseyCZ&locale=cs&layout=compact&theme=vision-friendly-dark)](https://github.com/anuraghazra/github-readme-stats)

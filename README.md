@@ -12,23 +12,21 @@
 </p>
 
 <p align="center">
-  <a href="https://caseycz.github.io/"><img src="https://img.shields.io/badge/Website-caseycz.github.io-38BDF8?style=for-the-badge&labelColor=0B1020" alt="CaseyCZ website" /></a>
-  <a href="https://130.61.49.108/games/"><img src="https://img.shields.io/badge/GameS-Live-38BDF8?style=for-the-badge&labelColor=0B1020" alt="GameS Calendar" /></a>
-  <a href="https://www.buymeacoffee.com/caseycz"><img src="https://img.shields.io/badge/%E2%98%95%20Podpora-Buy%20Me%20a%20Coffee-38BDF8?style=for-the-badge&labelColor=0B1020" alt="Podpořit CaseyCZ" /></a>
+  <a href="https://caseycz.github.io/"><img src="https://img.shields.io/badge/%F0%9F%8C%90%20Web-caseycz.github.io-38BDF8?style=for-the-badge&labelColor=0B1020" alt="CaseyCZ web" /></a>
+  <a href="https://130.61.49.108/games/"><img src="https://img.shields.io/badge/%F0%9F%8E%AE%20GameS-Calendar-38BDF8?style=for-the-badge&labelColor=0B1020" alt="GameS Calendar" /></a>
+  <a href="https://www.buymeacoffee.com/caseycz"><img src="https://img.shields.io/badge/%E2%98%95%20Podpo%C5%99it-CaseyCZ-38BDF8?style=for-the-badge&labelColor=0B1020" alt="Podpořit CaseyCZ" /></a>
 </p>
 
 ## Aktuální projekty
 
-| Projekt | Co dělá | Stav |
-| --- | --- | --- |
-| **[Homebridge Manager](https://caseycz.github.io/homebridge-manager/)** | Mobilní správa Homebridge: stav serveru, pluginy, konfigurace, logy, aktualizace, child bridges a zálohy. | `Ve vývoji` |
-| **[GameS Calendar](https://130.61.49.108/games/)** | Herní kalendář a vyhledávač připravovaných i vydaných her s filtry, oblíbenými tituly a exportem do kalendáře. | `Live · aktivní vývoj` |
-| **[Scriptable](https://github.com/CaseyCZ/Scriptable)** | Widgety a nástroje pro iPhone, sportovní data a vlastní instalační workflow. | `Aktivní vývoj` |
-| **[Travel Checklist](https://caseycz.github.io/Checklist.html)** | Pomocník na cesty s šablonami, autosave, průběhem balení, tiskem, exportem, importem a sdílením. | `Live` |
-| **[Stremio Sosáč](https://github.com/CaseyCZ/stremio.sosac)** | Hlavní Stremio addon s katalogy, metadaty a streamy ze Sosáč / Streamuj.tv. | `Live · aktivní vývoj` |
-| **[Stremio Sosáč Subtitles](https://github.com/CaseyCZ/stremio.sosac.subtitles)** | Samostatný Stremio addon pro české, slovenské a další dostupné titulky. | `Live · aktivní vývoj` |
-
-> **Live** = projekt je veřejně dostupný a použitelný. **Aktivní vývoj** = projekt se průběžně vyvíjí nebo udržuje.
+| Projekt | Co dělá |
+| --- | --- |
+| 🏠 **[Homebridge Manager](https://caseycz.github.io/homebridge-manager/)** | Mobilní správa Homebridge: stav serveru, pluginy, konfigurace, logy, aktualizace, child bridges a zálohy. |
+| 🎮 **[GameS Calendar](https://130.61.49.108/games/)** | Herní kalendář a vyhledávač připravovaných i vydaných her s filtry, oblíbenými tituly a exportem do kalendáře. |
+| 📱 **[Scriptable](https://github.com/CaseyCZ/Scriptable)** | Widgety a nástroje pro iPhone, sportovní data a vlastní instalační workflow. |
+| ✈️ **[Travel Checklist](https://caseycz.github.io/Checklist.html)** | Pomocník na cesty se šablonami, automatickým ukládáním, průběhem balení, tiskem, exportem, importem a sdílením. |
+| ▶️ **[Stremio Sosáč](https://github.com/CaseyCZ/stremio.sosac)** | Hlavní Stremio addon s katalogy, metadaty a streamy ze Sosáč / Streamuj.tv. |
+| 💬 **[Stremio Sosáč Subtitles](https://github.com/CaseyCZ/stremio.sosac.subtitles)** | Samostatný Stremio addon pro české, slovenské a další dostupné titulky. |
 
 ## Technologie & nástroje
 

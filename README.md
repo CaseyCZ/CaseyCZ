@@ -3,6 +3,11 @@
 </p>
 
 <p align="center">
+  <a href="README.md"><img src="https://img.shields.io/badge/CZ-%C4%8Ce%C5%A1tina-38BDF8?style=for-the-badge&labelColor=0B1020" alt="Čeština" /></a>
+  <a href="README_EN.md"><img src="https://img.shields.io/badge/EN-English-111827?style=for-the-badge&labelColor=0B1020" alt="English" /></a>
+</p>
+
+<p align="center">
   Stavím praktické nástroje, které bych sám chtěl používat — od správy Homebridge přes iPhone a herní kalendář až po widgety, cestovní seznamy a automatizace.
 </p>
 
@@ -20,7 +25,8 @@
 | **[GameS Calendar](https://130.61.49.108/games/)** | Herní kalendář a vyhledávač připravovaných i vydaných her s filtry, oblíbenými tituly a exportem do kalendáře. | `Live` |
 | **[Scriptable](https://github.com/CaseyCZ/Scriptable)** | Widgety a nástroje pro iPhone, sportovní data a vlastní instalační workflow. | `Aktivní` |
 | **[Travel Checklist](https://caseycz.github.io/Checklist.html)** | Pomocník na cesty s šablonami, autosave, průběhem balení, tiskem, exportem, importem a sdílením. | `Live` |
-| **[Stremio Sosáč](https://github.com/CaseyCZ/stremio.sosac)** | Stremio doplňky pro český a slovenský obsah, zdroje přehrávání a titulky. | `Aktivní` |
+| **[Stremio Sosáč](https://github.com/CaseyCZ/stremio.sosac)** | Hlavní Stremio addon s katalogy, metadaty a přehráváním streamů ze Sosáč / Streamuj.tv. | `Aktivní` |
+| **[Stremio Sosáč Subtitles](https://github.com/CaseyCZ/stremio.sosac.subtitles)** | Samostatný addon pro české, slovenské a další dostupné titulky ve Stremiu. | `Aktivní` |
 
 ## Technologie & nástroje
 
@@ -47,9 +53,11 @@ Většina projektů vzniká stejně: něco mi chybí, tak si zkusím vytvořit v
 ## GitHub
 
 <p>
-  <img src="https://github-readme-stats.vercel.app/api?username=CaseyCZ&show_icons=true&hide_border=true&bg_color=0B1020&title_color=38BDF8&text_color=CBD5E1&icon_color=38BDF8" alt="CaseyCZ GitHub stats" height="165" />
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=CaseyCZ&layout=compact&hide_border=true&bg_color=0B1020&title_color=38BDF8&text_color=CBD5E1" alt="CaseyCZ top languages" height="165" />
+  <a href="https://github.com/CaseyCZ"><img src="https://img.shields.io/badge/GitHub-Profil-38BDF8?style=for-the-badge&logo=github&logoColor=white&labelColor=0B1020" alt="CaseyCZ GitHub profil" /></a>
+  <a href="https://github.com/CaseyCZ?tab=repositories"><img src="https://img.shields.io/badge/Ve%C5%99ejn%C3%A9-Repozit%C3%A1%C5%99e-38BDF8?style=for-the-badge&labelColor=0B1020" alt="CaseyCZ repozitáře" /></a>
 </p>
+
+Externí statistické obrázky jsem odstranil, takže profil už není závislý na službě třetí strany, která může přestat fungovat.
 
 ## Podpora
 

@@ -12,23 +12,21 @@
 </p>
 
 <p align="center">
-  <a href="https://caseycz.github.io/"><img src="https://img.shields.io/badge/Website-caseycz.github.io-38BDF8?style=for-the-badge&labelColor=0B1020" alt="CaseyCZ website" /></a>
-  <a href="https://130.61.49.108/games/"><img src="https://img.shields.io/badge/GameS-Live-38BDF8?style=for-the-badge&labelColor=0B1020" alt="GameS Calendar" /></a>
-  <a href="https://www.buymeacoffee.com/caseycz"><img src="https://img.shields.io/badge/%E2%98%95%20Support-Buy%20Me%20a%20Coffee-38BDF8?style=for-the-badge&labelColor=0B1020" alt="Support CaseyCZ" /></a>
+  <a href="https://caseycz.github.io/"><img src="https://img.shields.io/badge/%F0%9F%8C%90%20Website-caseycz.github.io-38BDF8?style=for-the-badge&labelColor=0B1020" alt="CaseyCZ website" /></a>
+  <a href="https://130.61.49.108/games/"><img src="https://img.shields.io/badge/%F0%9F%8E%AE%20GameS-Calendar-38BDF8?style=for-the-badge&labelColor=0B1020" alt="GameS Calendar" /></a>
+  <a href="https://www.buymeacoffee.com/caseycz"><img src="https://img.shields.io/badge/%E2%98%95%20Support-CaseyCZ-38BDF8?style=for-the-badge&labelColor=0B1020" alt="Support CaseyCZ" /></a>
 </p>
 
 ## Current projects
 
-| Project | What it does | Status |
-| --- | --- | --- |
-| **[Homebridge Manager](https://caseycz.github.io/homebridge-manager/)** | Mobile Homebridge management: server status, plugins, configuration, logs, updates, child bridges and backups. | `In development` |
-| **[GameS Calendar](https://130.61.49.108/games/)** | Game release calendar and search for upcoming and released games with filters, favorites and calendar export. | `Live · active development` |
-| **[Scriptable](https://github.com/CaseyCZ/Scriptable)** | iPhone widgets, sports data and custom installation workflows. | `Active development` |
-| **[Travel Checklist](https://caseycz.github.io/Checklist.html)** | Travel packing assistant with templates, autosave, packing progress, print, export, import and sharing. | `Live` |
-| **[Stremio Sosáč](https://github.com/CaseyCZ/stremio.sosac)** | Main Stremio addon with catalogs, metadata and playback streams from Sosáč / Streamuj.tv. | `Live · active development` |
-| **[Stremio Sosáč Subtitles](https://github.com/CaseyCZ/stremio.sosac.subtitles)** | Separate Stremio subtitle addon for Czech, Slovak and other available subtitles. | `Live · active development` |
-
-> **Live** = the project is publicly available and usable. **Active development** = the project is currently being developed or maintained.
+| Project | What it does |
+| --- | --- |
+| 🏠 **[Homebridge Manager](https://caseycz.github.io/homebridge-manager/)** | Mobile Homebridge management: server status, plugins, configuration, logs, updates, child bridges and backups. |
+| 🎮 **[GameS Calendar](https://130.61.49.108/games/)** | Game release calendar and search for upcoming and released games with filters, favorites and calendar export. |
+| 📱 **[Scriptable](https://github.com/CaseyCZ/Scriptable)** | iPhone widgets, sports data and custom installation workflows. |
+| ✈️ **[Travel Checklist](https://caseycz.github.io/Checklist.html)** | Travel packing assistant with templates, autosave, packing progress, print, export, import and sharing. |
+| ▶️ **[Stremio Sosáč](https://github.com/CaseyCZ/stremio.sosac)** | Main Stremio addon with catalogs, metadata and playback streams from Sosáč / Streamuj.tv. |
+| 💬 **[Stremio Sosáč Subtitles](https://github.com/CaseyCZ/stremio.sosac.subtitles)** | Separate Stremio subtitle addon for Czech, Slovak and other available subtitles. |
 
 ## Technology & tools
 

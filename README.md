@@ -14,19 +14,21 @@
 <p align="center">
   <a href="https://caseycz.github.io/"><img src="https://img.shields.io/badge/Website-caseycz.github.io-38BDF8?style=for-the-badge&labelColor=0B1020" alt="CaseyCZ website" /></a>
   <a href="https://130.61.49.108/games/"><img src="https://img.shields.io/badge/GameS-Live-38BDF8?style=for-the-badge&labelColor=0B1020" alt="GameS Calendar" /></a>
-  <a href="https://www.buymeacoffee.com/caseycz"><img src="https://img.shields.io/badge/%E2%98%95%20Support-Buy%20Me%20a%20Coffee-38BDF8?style=for-the-badge&labelColor=0B1020" alt="Support CaseyCZ" /></a>
+  <a href="https://www.buymeacoffee.com/caseycz"><img src="https://img.shields.io/badge/%E2%98%95%20Podpora-Buy%20Me%20a%20Coffee-38BDF8?style=for-the-badge&labelColor=0B1020" alt="Podpořit CaseyCZ" /></a>
 </p>
 
 ## Aktuální projekty
 
 | Projekt | Co dělá | Stav |
 | --- | --- | --- |
-| **[Homebridge Manager](https://caseycz.github.io/homebridge-manager/)** | Mobilní správa Homebridge: stav serveru, pluginy, konfigurace, logy, aktualizace, child bridges a zálohy. | `PWA / iOS · ve vývoji` |
-| **[GameS Calendar](https://130.61.49.108/games/)** | Herní kalendář a vyhledávač připravovaných i vydaných her s filtry, oblíbenými tituly a exportem do kalendáře. | `Live` |
-| **[Scriptable](https://github.com/CaseyCZ/Scriptable)** | Widgety a nástroje pro iPhone, sportovní data a vlastní instalační workflow. | `Aktivní` |
+| **[Homebridge Manager](https://caseycz.github.io/homebridge-manager/)** | Mobilní správa Homebridge: stav serveru, pluginy, konfigurace, logy, aktualizace, child bridges a zálohy. | `Ve vývoji` |
+| **[GameS Calendar](https://130.61.49.108/games/)** | Herní kalendář a vyhledávač připravovaných i vydaných her s filtry, oblíbenými tituly a exportem do kalendáře. | `Live · aktivní vývoj` |
+| **[Scriptable](https://github.com/CaseyCZ/Scriptable)** | Widgety a nástroje pro iPhone, sportovní data a vlastní instalační workflow. | `Aktivní vývoj` |
 | **[Travel Checklist](https://caseycz.github.io/Checklist.html)** | Pomocník na cesty s šablonami, autosave, průběhem balení, tiskem, exportem, importem a sdílením. | `Live` |
-| **[Stremio Sosáč](https://github.com/CaseyCZ/stremio.sosac)** | Hlavní Stremio addon s katalogy, metadaty a přehráváním streamů ze Sosáč / Streamuj.tv. | `Aktivní` |
-| **[Stremio Sosáč Subtitles](https://github.com/CaseyCZ/stremio.sosac.subtitles)** | Samostatný addon pro české, slovenské a další dostupné titulky ve Stremiu. | `Aktivní` |
+| **[Stremio Sosáč](https://github.com/CaseyCZ/stremio.sosac)** | Hlavní Stremio addon s katalogy, metadaty a streamy ze Sosáč / Streamuj.tv. | `Live · aktivní vývoj` |
+| **[Stremio Sosáč Subtitles](https://github.com/CaseyCZ/stremio.sosac.subtitles)** | Samostatný Stremio addon pro české, slovenské a další dostupné titulky. | `Live · aktivní vývoj` |
+
+> **Live** = projekt je veřejně dostupný a použitelný. **Aktivní vývoj** = projekt se průběžně vyvíjí nebo udržuje.
 
 ## Technologie & nástroje
 
@@ -50,14 +52,11 @@ Jsem **Lukáš Kysela / CaseyCZ**. Profesně se dlouhodobě pohybuji v plánová
 
 Většina projektů vzniká stejně: něco mi chybí, tak si zkusím vytvořit vlastní řešení a postupně ho vylepšovat tak, aby bylo opravdu použitelné.
 
-## GitHub
+## Aktivita na GitHubu
 
-<p>
-  <a href="https://github.com/CaseyCZ"><img src="https://img.shields.io/badge/GitHub-Profil-38BDF8?style=for-the-badge&logo=github&logoColor=white&labelColor=0B1020" alt="CaseyCZ GitHub profil" /></a>
-  <a href="https://github.com/CaseyCZ?tab=repositories"><img src="https://img.shields.io/badge/Ve%C5%99ejn%C3%A9-Repozit%C3%A1%C5%99e-38BDF8?style=for-the-badge&labelColor=0B1020" alt="CaseyCZ repozitáře" /></a>
+<p align="center">
+  <img src="https://streak-stats.demolab.com?user=CaseyCZ&hide_border=true&background=0B1020&stroke=2A3850&ring=38BDF8&fire=38BDF8&currStreakNum=F8FAFC&sideNums=F8FAFC&currStreakLabel=38BDF8&sideLabels=94A3B8&dates=64748B" alt="CaseyCZ — GitHub streak stats" />
 </p>
-
-Externí statistické obrázky jsem odstranil, takže profil už není závislý na službě třetí strany, která může přestat fungovat.
 
 ## Podpora
 
@@ -69,7 +68,6 @@ Pokud ti některý z projektů pomáhá, můžeš podpořit další vývoj přes
 
 <p align="center">
   <a href="https://caseycz.github.io/">Website</a> ·
-  <a href="https://github.com/CaseyCZ">GitHub</a> ·
   <a href="https://www.youtube.com/channel/UCTT4ob7-2lkjdQf3yuqrjDw">YouTube</a> ·
   <a href="https://twitter.com/Searcasey">X / Twitter</a> ·
   <a href="https://www.reddit.com/user/CaseyCZ">Reddit</a>

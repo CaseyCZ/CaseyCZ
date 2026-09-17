@@ -21,12 +21,14 @@
 
 | Project | What it does | Status |
 | --- | --- | --- |
-| **[Homebridge Manager](https://caseycz.github.io/homebridge-manager/)** | Mobile Homebridge management: server status, plugins, configuration, logs, updates, child bridges and backups. | `PWA / iOS · in development` |
-| **[GameS Calendar](https://130.61.49.108/games/)** | Game release calendar and search for upcoming and released games with filters, favorites and calendar export. | `Live` |
-| **[Scriptable](https://github.com/CaseyCZ/Scriptable)** | iPhone widgets, sports data and custom installation workflows. | `Active` |
+| **[Homebridge Manager](https://caseycz.github.io/homebridge-manager/)** | Mobile Homebridge management: server status, plugins, configuration, logs, updates, child bridges and backups. | `In development` |
+| **[GameS Calendar](https://130.61.49.108/games/)** | Game release calendar and search for upcoming and released games with filters, favorites and calendar export. | `Live · active development` |
+| **[Scriptable](https://github.com/CaseyCZ/Scriptable)** | iPhone widgets, sports data and custom installation workflows. | `Active development` |
 | **[Travel Checklist](https://caseycz.github.io/Checklist.html)** | Travel packing assistant with templates, autosave, packing progress, print, export, import and sharing. | `Live` |
-| **[Stremio Sosáč](https://github.com/CaseyCZ/stremio.sosac)** | Main Stremio addon with catalogs, metadata and playback streams from Sosáč / Streamuj.tv. | `Active` |
-| **[Stremio Sosáč Subtitles](https://github.com/CaseyCZ/stremio.sosac.subtitles)** | Separate Stremio subtitle addon for Czech, Slovak and other available subtitles. | `Active` |
+| **[Stremio Sosáč](https://github.com/CaseyCZ/stremio.sosac)** | Main Stremio addon with catalogs, metadata and playback streams from Sosáč / Streamuj.tv. | `Live · active development` |
+| **[Stremio Sosáč Subtitles](https://github.com/CaseyCZ/stremio.sosac.subtitles)** | Separate Stremio subtitle addon for Czech, Slovak and other available subtitles. | `Live · active development` |
+
+> **Live** = the project is publicly available and usable. **Active development** = the project is currently being developed or maintained.
 
 ## Technology & tools
 
@@ -50,14 +52,11 @@ I'm **Lukáš Kysela / CaseyCZ**. Professionally, I have long-term experience in
 
 Most projects start the same way: I need a tool that does not exist exactly the way I want it, so I build my own and keep improving it until it becomes genuinely useful.
 
-## GitHub
+## GitHub activity
 
-<p>
-  <a href="https://github.com/CaseyCZ"><img src="https://img.shields.io/badge/GitHub-Profile-38BDF8?style=for-the-badge&logo=github&logoColor=white&labelColor=0B1020" alt="CaseyCZ GitHub profile" /></a>
-  <a href="https://github.com/CaseyCZ?tab=repositories"><img src="https://img.shields.io/badge/Public-Repositories-38BDF8?style=for-the-badge&labelColor=0B1020" alt="CaseyCZ repositories" /></a>
+<p align="center">
+  <img src="https://streak-stats.demolab.com?user=CaseyCZ&hide_border=true&background=0B1020&stroke=2A3850&ring=38BDF8&fire=38BDF8&currStreakNum=F8FAFC&sideNums=F8FAFC&currStreakLabel=38BDF8&sideLabels=94A3B8&dates=64748B" alt="CaseyCZ — GitHub streak stats" />
 </p>
-
-No external statistics widgets here — only direct links, so the profile stays reliable even when third-party stat services are unavailable.
 
 ## Support
 
@@ -69,7 +68,6 @@ If one of my projects is useful to you, you can support further development thro
 
 <p align="center">
   <a href="https://caseycz.github.io/">Website</a> ·
-  <a href="https://github.com/CaseyCZ">GitHub</a> ·
   <a href="https://www.youtube.com/channel/UCTT4ob7-2lkjdQf3yuqrjDw">YouTube</a> ·
   <a href="https://twitter.com/Searcasey">X / Twitter</a> ·
   <a href="https://www.reddit.com/user/CaseyCZ">Reddit</a>

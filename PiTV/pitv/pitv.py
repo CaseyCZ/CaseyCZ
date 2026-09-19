@@ -16,6 +16,7 @@ from apk_backend import (discover_apks, ensure_apk_installed, inspect_apk,
                          waydroid_available, waydroid_status, tailscale_info)
 from store_backend import (download_github_apk, load_store_catalog,
                            mark_android_installed, store_state)
+from update_backend import is_newer, remote_pitv_version
 
 APP_NAME = "PiTV"
 VERSION = "1.1.0"
@@ -551,6 +552,10 @@ class PiTV:
         self.store_states = {}
         self.store_refreshing = False
         self.store_busy_id = ""
+        self.updates_selected = 0
+        self.remote_pitv = ""
+        self.updates_status = "Nezkontrolováno"
+        self.updates_busy = False
         self.external_proc = None
         self.external_kind = None
 
@@ -1076,7 +1081,8 @@ class PiTV:
         ("HDMI / CEC", "TV ovladač a ovládání televize"),
         ("Aplikace", "PiTV Store a aplikace na domovské obrazovce"),
         ("Android / APK", "APK inspector a Waydroid backend"),
-        ("Systém", "Stav Raspberry Pi a aktualizace"),
+        ("Aktualizace", "PiTV, Store aplikace a Ubuntu"),
+        ("Systém", "Stav Raspberry Pi"),
         ("Napájení", "Restart nebo vypnutí"),
         ("O PiTV", "Verze a informace"),
     ]
@@ -1380,6 +1386,161 @@ class PiTV:
                        rows[start:start+visible], self.android_selected-start,
                        "Nahraj .apk přes SSH do /var/lib/pitv/apks • OK = akce")
 
+    def update_items(self):
+        if self.remote_pitv:
+            pitv_value = f"{VERSION} → {self.remote_pitv}" if is_newer(self.remote_pitv, VERSION) else f"{VERSION} · aktuální"
+        else:
+            pitv_value = f"{VERSION} · {self.updates_status}"
+
+        ubuntu_value = "—" if self.update_count is None else f"{self.update_count} balíčků"
+        if self.update_checking:
+            ubuntu_value = "Kontroluji…"
+
+        installed_linux = []
+        for item in self.store_catalog:
+            ins = item.get("installer", {})
+            if ins.get("type") == "apt":
+                try:
+                    if store_state(item) == "installed":
+                        installed_linux.append(item.get("name", ins.get("package","")))
+                except Exception:
+                    pass
+
+        linux_value = ", ".join(installed_linux) if installed_linux else "žádné"
+        return [
+            ("PiTV", pitv_value),
+            ("Store katalog", "GitHub · CaseyCZ"),
+            ("Linux Store aplikace", linux_value),
+            ("Ubuntu", ubuntu_value),
+            ("Zkontrolovat vše", "OK"),
+            ("Aktualizovat PiTV", "OK" if not self.updates_busy else "Probíhá…"),
+            ("Aktualizovat Store katalog", "OK"),
+            ("Aktualizovat Linux Store aplikace", "OK"),
+            ("Aktualizovat Ubuntu", "OK"),
+            ("Restartovat PiTV UI", "OK"),
+        ]
+
+    def draw_updates(self):
+        rows = self.update_items()
+        visible = 8
+        start = max(0, min(self.updates_selected-visible//2, max(0, len(rows)-visible)))
+        self.draw_rows("Aktualizace", "Vše k PiTV přímo z TV rozhraní",
+                       rows[start:start+visible], self.updates_selected-start,
+                       "PiTV se aktualizuje z GitHubu • uživatelské nastavení zůstává zachováno")
+
+    def check_updates_async(self):
+        if self.updates_busy:
+            return
+        self.updates_busy = True
+        self.updates_status = "Kontroluji…"
+        self.show_toast("Kontroluji aktualizace…", 4)
+
+        def worker():
+            try:
+                try:
+                    self.remote_pitv = remote_pitv_version()
+                except Exception:
+                    self.remote_pitv = ""
+
+                run_privileged("apt-update", {}, 300)
+                self.update_count = count_updates()
+
+                self.store_catalog = load_store_catalog()
+                for item in self.store_catalog:
+                    try:
+                        self.store_states[item.get("id","")] = store_state(item)
+                    except Exception:
+                        pass
+
+                if self.remote_pitv and is_newer(self.remote_pitv, VERSION):
+                    self.updates_status = "Nová verze"
+                    self.show_toast(f"Nové PiTV {self.remote_pitv} je dostupné", 5)
+                else:
+                    self.updates_status = "Aktuální"
+                    self.show_toast("Kontrola aktualizací dokončena", 4)
+            finally:
+                self.updates_busy = False
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def update_pitv_async(self):
+        if self.updates_busy:
+            return
+        self.updates_busy = True
+        self.show_toast("Aktualizuji PiTV z GitHubu…", 5)
+
+        def worker():
+            ok, msg = run_privileged("pitv-self-update", {}, 1800)
+            self.updates_busy = False
+            if ok:
+                self.show_toast("PiTV aktualizováno · restartuji rozhraní", 4)
+                time.sleep(1)
+                pygame.quit()
+                os.execv(sys.executable, [sys.executable, __file__])
+            else:
+                self.show_toast(msg, 6)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def update_store_catalog_async(self):
+        if self.updates_busy:
+            return
+        self.updates_busy = True
+        self.show_toast("Aktualizuji PiTV Store katalog…", 4)
+
+        def worker():
+            ok, msg = run_privileged("store-catalog-update", {}, 60)
+            if ok:
+                self.store_catalog = load_store_catalog()
+                self.store_states = {}
+                self.refresh_store_async()
+            self.updates_busy = False
+            self.show_toast(msg, 5)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def update_linux_store_apps_async(self):
+        if self.updates_busy:
+            return
+        packages = []
+        for item in self.store_catalog:
+            ins = item.get("installer", {})
+            if ins.get("type") == "apt":
+                try:
+                    if store_state(item) == "installed":
+                        packages.append(ins.get("package",""))
+                except Exception:
+                    pass
+        packages = [p for p in packages if p]
+        if not packages:
+            self.show_toast("Žádné Linux Store aplikace k aktualizaci")
+            return
+
+        self.updates_busy = True
+        self.show_toast("Aktualizuji Store aplikace…", 4)
+
+        def worker():
+            ok, msg = run_privileged("apt-store-upgrade", {"packages": packages}, 1200)
+            self.updates_busy = False
+            self.apps = load_apps()
+            self.show_toast(msg, 5)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def update_ubuntu_async(self):
+        if self.updates_busy:
+            return
+        self.updates_busy = True
+        self.show_toast("Aktualizuji Ubuntu balíčky…", 5)
+
+        def worker():
+            ok, msg = run_privileged("apt-upgrade", {}, 1200)
+            self.update_count = count_updates()
+            self.updates_busy = False
+            self.show_toast(msg, 5)
+
+        threading.Thread(target=worker, daemon=True).start()
+
     def system_items(self):
         upd = "Kontroluji…" if self.update_checking else (
             "—" if self.update_count is None else f"{self.update_count} balíčků"
@@ -1443,6 +1604,7 @@ class PiTV:
         elif self.page == "apps": self.draw_apps_settings()
         elif self.page == "store": self.draw_store()
         elif self.page == "android": self.draw_android()
+        elif self.page == "updates": self.draw_updates()
         elif self.page == "system": self.draw_system()
         elif self.page == "power": self.draw_power()
         elif self.page == "about": self.draw_about()
@@ -1541,7 +1703,7 @@ class PiTV:
 
     def enter_settings_item(self):
         pages = ["appearance", "screensaver", "network", "audio", "cec",
-                 "apps", "android", "system", "power", "about"]
+                 "apps", "android", "updates", "system", "power", "about"]
         self.page = pages[self.settings_selected]
         self.sub_selected = 0
         if self.page == "network":
@@ -1556,6 +1718,9 @@ class PiTV:
             self.apps_selected = 0
         elif self.page == "android":
             self.android_selected = 0
+        elif self.page == "updates":
+            self.updates_selected = 0
+            self.check_updates_async()
         elif self.page == "system":
             self.system_selected = 0
 
@@ -1783,6 +1948,40 @@ class PiTV:
                         self.show_toast("Spouštím Android UI")
                     except Exception as e:
                         self.show_toast(str(e), 5)
+
+        elif self.page == "updates":
+            rows = self.update_items()
+            if key == pygame.K_UP:
+                self.updates_selected = max(0, self.updates_selected-1)
+            elif key == pygame.K_DOWN:
+                self.updates_selected = min(len(rows)-1, self.updates_selected+1)
+            elif key in (pygame.K_RETURN, pygame.K_KP_ENTER):
+                if self.updates_selected == 4:
+                    self.check_updates_async()
+                elif self.updates_selected == 5:
+                    self.open_confirm(
+                        "Aktualizovat PiTV",
+                        "Stáhnout a nainstalovat nejnovější PiTV z GitHubu?",
+                        self.update_pitv_async,
+                    )
+                elif self.updates_selected == 6:
+                    self.update_store_catalog_async()
+                elif self.updates_selected == 7:
+                    self.open_confirm(
+                        "Store aplikace",
+                        "Aktualizovat Linux aplikace nainstalované z PiTV Store?",
+                        self.update_linux_store_apps_async,
+                    )
+                elif self.updates_selected == 8:
+                    self.open_confirm(
+                        "Aktualizovat Ubuntu",
+                        "Nainstalovat dostupné systémové aktualizace?",
+                        self.update_ubuntu_async,
+                    )
+                elif self.updates_selected == 9:
+                    self.show_toast("Restartuji PiTV UI…")
+                    pygame.quit()
+                    os.execv(sys.executable, [sys.executable, __file__])
 
         elif self.page == "system":
             rows = self.system_items()

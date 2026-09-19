@@ -8,7 +8,7 @@ PITV_VERSION_URL = "https://raw.githubusercontent.com/CaseyCZ/CaseyCZ/pitv-stand
 def remote_pitv_version():
     req = urllib.request.Request(
         PITV_VERSION_URL,
-        headers={"User-Agent": "PiTV-Updater/1.2"},
+        headers={"User-Agent": "PiTV-Updater/1.3"},
     )
     with urllib.request.urlopen(req, timeout=20) as r:
         text = r.read().decode("utf-8", errors="replace")

@@ -116,6 +116,64 @@ elif action == "apt-store-upgrade":
     run(["apt-get", "-y", "install", "--only-upgrade"] + packages, timeout=1200, env=env)
     out("Linux Store aplikace aktualizovány")
 
+elif action == "background-status":
+    def svc(name):
+        p = subprocess.run(["systemctl", "is-active", name], stdout=subprocess.PIPE,
+                           stderr=subprocess.DEVNULL, text=True, check=False)
+        state = (p.stdout or "").strip()
+        return state or "není"
+
+    status = {
+        "tailscale": svc("tailscaled"),
+        "homebridge": svc("homebridge"),
+        "docker": svc("docker"),
+        "ssh": svc("ssh"),
+        "atvloadly": "nenalezen",
+        "atvloadly_container": "",
+    }
+
+    if shutil.which("docker"):
+        p = subprocess.run(
+            ["docker", "ps", "-a", "--format", "{{.Names}}|{{.State}}"],
+            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+            text=True, check=False,
+        )
+        for line in (p.stdout or "").splitlines():
+            if "|" not in line:
+                continue
+            name, state = line.split("|", 1)
+            if "atvloadly" in name.lower():
+                status["atvloadly"] = state.strip() or "nalezen"
+                status["atvloadly_container"] = name.strip()
+                break
+
+    print(json.dumps(status, ensure_ascii=False))
+    raise SystemExit(0)
+
+elif action == "background-restart":
+    target = str(payload.get("target", "")).strip().lower()
+    if target in ("tailscale", "tailscaled"):
+        run(["systemctl", "restart", "tailscaled"], timeout=45)
+        out("Tailscale restartován")
+    if target == "homebridge":
+        run(["systemctl", "restart", "homebridge"], timeout=60)
+        out("Homebridge restartován")
+    if target == "atvloadly":
+        if shutil.which("docker") is None:
+            out("Docker není nainstalovaný", 2)
+        p = subprocess.run(
+            ["docker", "ps", "-a", "--format", "{{.Names}}"],
+            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+            text=True, check=False,
+        )
+        name = next((x.strip() for x in (p.stdout or "").splitlines()
+                     if "atvloadly" in x.lower()), "")
+        if not name:
+            out("ATVLoadly kontejner nebyl nalezen", 2)
+        run(["docker", "restart", name], timeout=90)
+        out("ATVLoadly restartováno")
+    out("Tato služba není povolena pro restart z PiTV", 2)
+
 elif action == "apt-update":
     env = os.environ.copy()
     env["DEBIAN_FRONTEND"] = "noninteractive"

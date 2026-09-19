@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -u
 TARGET="${1:-}"
+APK="${2:-}"
 [ -n "$TARGET" ] || exit 2
 
 cleanup() {
@@ -12,16 +13,23 @@ sudo -n /usr/local/libexec/pitv-helper waydroid-container-start </dev/null >/dev
 waydroid session start >/tmp/pitv-waydroid-session.log 2>&1 &
 SESSION_PID=$!
 
-for _ in $(seq 1 40); do
-  if waydroid status 2>/dev/null | grep -qi 'RUNNING'; then break; fi
+READY=0
+for _ in $(seq 1 60); do
+  if waydroid status 2>/dev/null | grep -qi 'RUNNING'; then READY=1; break; fi
   sleep 0.5
 done
+[ "$READY" -eq 1 ] || exit 3
 
 if [ "$TARGET" = "--full-ui" ]; then
   waydroid show-full-ui
 else
-  waydroid app launch "$TARGET"
+  if [ -n "$APK" ] && [ -f "$APK" ]; then
+    if ! waydroid app list 2>/dev/null | grep -Fq "$TARGET"; then
+      waydroid app install "$APK" || exit 4
+    fi
+  fi
+  waydroid app launch "$TARGET" || exit 5
 fi
 
-# Keep the launcher wrapper alive so PiTV HOME can terminate the whole app session.
+# Keep wrapper alive so HOME from PiTV can terminate the Android session.
 while kill -0 "$SESSION_PID" 2>/dev/null; do sleep 1; done

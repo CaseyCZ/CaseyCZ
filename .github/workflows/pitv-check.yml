@@ -2,7 +2,7 @@ name: PiTV Check
 
 on:
   push:
-    branches: [pitv-v1]
+    branches: [pitv-standalone]
     paths:
       - "**"
       - ".github/workflows/pitv-check.yml"

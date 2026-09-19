@@ -36,6 +36,8 @@ jobs:
           test -x /usr/local/bin/pitv-waydroid-launch
           test -x /usr/local/libexec/pitv-helper
           test -x /usr/local/libexec/pitv-self-update
+          test -x /usr/local/libexec/pitv-install-waydroid
+          bash -n /usr/local/libexec/pitv-install-waydroid
           test -f /etc/pitv/store/catalog.json
           test -f /etc/pitv/store/server_catalog.json
           id pitv

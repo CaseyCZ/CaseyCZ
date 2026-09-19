@@ -2,6 +2,7 @@
 import json, os, shutil, subprocess, sys, tempfile, urllib.request
 
 ALLOWED_STORE_APT = {"kodi"}
+ALLOWED_PLAY_PACKAGES = {"com.google.android.youtube.tv", "com.spotify.tv.android", "com.plexapp.android"}
 
 def out(msg, code=0):
     print(msg)
@@ -55,6 +56,19 @@ elif action == "waydroid-install":
         out("Waydroid instalátor PiTV není nainstalovaný", 2)
     run([installer], timeout=1800)
     out("Waydroid + Google Play nainstalován")
+
+elif action == "waydroid-open-play-store":
+    package = str(payload.get("package", "")).strip()
+    if package not in ALLOWED_PLAY_PACKAGES:
+        out("Aplikace není povolena pro Google Play akci", 2)
+    if shutil.which("waydroid") is None:
+        out("Waydroid není nainstalovaný", 2)
+    run([
+        "waydroid", "shell", "am", "start",
+        "-a", "android.intent.action.VIEW",
+        "-d", f"market://details?id={package}",
+    ], timeout=30)
+    out("Google Play detail otevřen")
 
 elif action == "waydroid-container-start":
     if shutil.which("waydroid") is None:

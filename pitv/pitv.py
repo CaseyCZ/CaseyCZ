@@ -1557,6 +1557,17 @@ class PiTV:
 
                     meta = inspect_apk(path)
                     package = meta.get("package","")
+                    expected_package = installer.get("expected_package", "")
+                    if expected_package and package != expected_package:
+                        try:
+                            Path(path).unlink()
+                        except Exception:
+                            pass
+                        finish(
+                            f"APK odmítnuto: package {package or 'neznámý'} neodpovídá {expected_package}",
+                            False,
+                        )
+                        return
                     app = {
                         "name": meta.get("name") or item.get("name","APK"),
                         "kind": "apk",

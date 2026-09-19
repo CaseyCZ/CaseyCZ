@@ -3,9 +3,14 @@ name: PiTV Check
 on:
   push:
     branches: [pitv-standalone]
-    paths:
-      - "**"
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pitv-check-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   check:

@@ -7,7 +7,7 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
-ARCHIVE_URL = "https://codeload.github.com/CaseyCZ/CaseyCZ/zip/refs/heads/pitv-v1"
+ARCHIVE_URL = "https://codeload.github.com/CaseyCZ/CaseyCZ/zip/refs/heads/pitv-standalone"
 
 
 def fail(message):
@@ -21,7 +21,7 @@ if os.geteuid() != 0:
 with tempfile.TemporaryDirectory(prefix="pitv-update-") as td:
     td = Path(td)
     archive = td / "pitv.zip"
-    req = urllib.request.Request(ARCHIVE_URL, headers={"User-Agent": "PiTV-Updater/1.1"})
+    req = urllib.request.Request(ARCHIVE_URL, headers={"User-Agent": "PiTV-Updater/1.2"})
     try:
         with urllib.request.urlopen(req, timeout=60) as src, open(archive, "wb") as out:
             shutil.copyfileobj(src, out)
@@ -34,7 +34,7 @@ with tempfile.TemporaryDirectory(prefix="pitv-update-") as td:
     except Exception as e:
         fail(f"Rozbalení PiTV selhalo: {e}")
 
-    candidates = list((td / "src").glob("*/PiTV/install.sh"))
+    candidates = list((td / "src").glob("*/install.sh"))
     if not candidates:
         fail("V balíčku nebyl nalezen PiTV/install.sh")
 

@@ -1,60 +1,148 @@
-<p align="center">
-  <img src="assets/caseycz-header.svg" alt="CaseyCZ — apps, tools & projects" width="100%" />
-</p>
+# PiTV — standalone
 
-<p align="center">
-  <img src="https://img.shields.io/badge/CZ-%C4%8Ce%C5%A1tina-38BDF8?style=for-the-badge&labelColor=0284C7" alt="Čeština" />
-  <a href="README_EN.md"><img src="https://img.shields.io/badge/EN-English-172033?style=for-the-badge&labelColor=111827" alt="English" /></a>
-</p>
+Tato větev obsahuje pouze PiTV. PiTV runtime, Store, Server Store a self-update nečtou žádný kód z ostatních projektů v repozitáři.
 
-<p align="center">
-  Stavím praktické nástroje, které bych sám chtěl používat — od správy Homebridge přes herní kalendář až po iPhone widgety, iOS zdroje, cestovní nástroje a Stremio doplňky.
-</p>
+PiTV is a lightweight TV shell for **Ubuntu Server ARM64 on Raspberry Pi 4**. The Raspberry Pi stays a 24/7 server while HDMI shows a remote-friendly launcher.
 
-<p align="center">
-  <a href="https://caseycz.github.io/"><img src="https://img.shields.io/badge/CaseyCZ%20Website-OTEV%C5%98%C3%8DT-38BDF8?style=for-the-badge&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="CaseyCZ Website" /></a>
-</p>
+## What is included
 
-## Aktuální projekty
+- fullscreen PiTV launcher, CaseyCZ/iOS Hub visual style
+- lightweight **labwc Wayland compositor** (no GNOME/Ubuntu Desktop)
+- HDMI-CEC remote: arrows, OK, Back, Home, TV power, active source, volume, mute
+- 24/7 screensaver with moving clock, black screen and optional CEC TV standby
+- Ethernet status + Wi-Fi scan/connect/disconnect through NetworkManager
+- HDMI-only audio model for Raspberry Pi 4 (HDMI 1/2)
+- Linux apps (Kodi etc.) from `/etc/pitv/apps.d/*.json`
+- APK Inspector using `aapt` / `apktool`
+- APK discovery from `/var/lib/pitv/apks/` and `~/PiTV/APKs/`
+- Waydroid backend: install APK, launch Android app, full Android UI
+- application visibility settings
+- PiTV Store: Kodi, SmartTube, Stremio, YouTube, Spotify and Plex
+- Server Store: Homebridge, Tailscale, Docker Engine and ATVLoadly
+- system health, temperature, RAM, disk, uptime and APT updates
+- restart/power-off confirmations
+- Tailscale status shown in About; Tailscale itself stays a background service
+- SSH remains the maintenance/admin path
 
-<table>
-  <thead><tr><th>Projekt</th><th>Verze</th><th>Info</th><th>Odkazy</th></tr></thead>
-  <tbody>
-    <tr><td><strong>Homebridge Manager</strong></td><td><code>v0.6.4</code></td><td>Mobilní správa Homebridge navržená pro iPhone a PWA.</td><td><a href="https://caseycz.github.io/homebridge-manager/"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Homebridge Manager web" /></a></td></tr>
-    <tr><td><strong>GameS Calendar</strong></td><td><code>v3.1.5</code></td><td>Herní kalendář a vyhledávač připravovaných i vydaných her.</td><td><a href="https://130.61.49.108/games/"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="GameS web" /></a> <a href="https://github.com/CaseyCZ/GameS-Calendar-Website"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="GameS GitHub" /></a></td></tr>
-    <tr><td><strong>Scriptable Apps</strong></td><td><code>více aplikací</code></td><td>Widgety a nástroje pro iPhone včetně Sports Info a LockScreen Generator.</td><td><a href="https://caseycz.github.io/Scriptable/"><img src="https://img.shields.io/badge/Web-Katalog-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Scriptable katalog" /></a> <a href="https://github.com/CaseyCZ/Scriptable"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="Scriptable GitHub" /></a></td></tr>
-    <tr><td><strong>iOS Hub</strong></td><td>—</td><td>Živý katalog iOS zdrojů, dvojité filtry, Source Builder a lokální DEB → IPA převodník.</td><td><a href="https://caseycz.github.io/iOS-Hub/"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="iOS Hub web" /></a> <a href="https://github.com/CaseyCZ/iOS-Hub"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="iOS Hub GitHub" /></a></td></tr>
-    <tr><td><strong>Travel Checklist</strong></td><td><code>web</code></td><td>Pomocník na cesty se seznamy, šablonami, tiskem a sdílením.</td><td><a href="https://caseycz.github.io/Checklist.html"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Travel Checklist web" /></a> <a href="https://github.com/CaseyCZ/CaseyCZ.github.io"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="Website GitHub" /></a></td></tr>
-    <tr><td><strong>Stremio Sosáč</strong></td><td><code>v0.4.5</code></td><td>Katalogy, metadata a video streamy pro Stremio.</td><td><a href="https://130.61.49.108/configure"><img src="https://img.shields.io/badge/Konfigurace-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Stremio Sosáč konfigurace" /></a> <a href="https://github.com/CaseyCZ/stremio.sosac"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="Stremio Sosáč GitHub" /></a></td></tr>
-    <tr><td><strong>Sosáč Subtitles</strong></td><td><code>v2.9.8</code></td><td>Samostatný Stremio addon pro titulky.</td><td><a href="https://130.61.49.108:8443/configure"><img src="https://img.shields.io/badge/Konfigurace-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Sosáč Subtitles konfigurace" /></a> <a href="https://github.com/CaseyCZ/stremio.sosac.subtitles"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="Sosáč Subtitles GitHub" /></a></td></tr>
-  </tbody>
-</table>
+## Install
 
-## O mně
+Ubuntu Server 24.04 ARM64 is the primary target.
 
-Jsem **Lukáš Kysela / CaseyCZ**. Profesně se dlouhodobě pohybuji v plánování výroby a SAPu. Ve vlastních projektech se zaměřuji hlavně na praktické aplikace, automatizaci a nástroje, které řeší konkrétní potřebu.
+```bash
+unzip PiTV-v1.0.zip
+cd PiTV-v1.0
+sudo ./install.sh
+sudo reboot
+```
 
-## Aktivita na GitHubu
+After boot: `tty1 -> autologin pitv -> dbus -> labwc -> PiTV`. SSH is unchanged.
 
-<p align="center">
-  <img src="https://streak-stats.demolab.com?user=CaseyCZ&hide_border=true&background=0B1020&stroke=2A3850&ring=38BDF8&fire=38BDF8&currStreakNum=F8FAFC&sideNums=F8FAFC&currStreakLabel=38BDF8&sideLabels=94A3B8&dates=64748B" alt="CaseyCZ — GitHub streak stats" />
-</p>
+## Kodi
 
-## Podpora
+```bash
+sudo apt install kodi
+```
 
-<p align="center">
-  <a href="https://www.buymeacoffee.com/caseycz"><img src="https://img.shields.io/badge/Podpo%C5%99it%20CaseyCZ-Buy%20Me%20a%20Coffee-38BDF8?style=for-the-badge&labelColor=0284C7&logo=buymeacoffee&logoColor=white" alt="Podpořit CaseyCZ" /></a>
-</p>
+`config/apps.d/kodi.json` is already included; PiTV shows the tile when Kodi is installed.
 
-<p align="center">
-  <a href="https://www.buymeacoffee.com/caseycz"><img src="https://caseycz.github.io/support-qr.svg" width="150" alt="QR kód Buy Me a Coffee CaseyCZ" /></a><br>
-  <sub>Naskenuj QR kód nebo klikni na tlačítko.</sub>
-</p>
+## APK
 
-## Sociální sítě
+Copy APK files over SSH/SFTP/Tailscale:
 
-<p align="center">
-  <a href="https://www.youtube.com/channel/UCTT4ob7-2lkjdQf3yuqrjDw"><img src="https://img.shields.io/badge/YouTube-Sledovat-38BDF8?style=for-the-badge&labelColor=0284C7&logo=youtube&logoColor=white" alt="YouTube" /></a>
-  <a href="https://twitter.com/Searcasey"><img src="https://img.shields.io/badge/X%20%2F%20Twitter-Sledovat-38BDF8?style=for-the-badge&labelColor=0284C7&logo=x&logoColor=white" alt="X / Twitter" /></a>
-  <a href="https://www.reddit.com/user/CaseyCZ"><img src="https://img.shields.io/badge/Reddit-Profil-38BDF8?style=for-the-badge&labelColor=0284C7&logo=reddit&logoColor=white" alt="Reddit" /></a>
-</p>
+```bash
+sudo cp SmartTube.apk /var/lib/pitv/apks/
+sudo chown pitv:pitv /var/lib/pitv/apks/SmartTube.apk
+```
+
+PiTV reads package name, label, launchable activity, SDK and Leanback/TV hints with `aapt`, then creates the launcher tile automatically.
+
+### Waydroid
+
+Waydroid is optional because PiTV also works as a pure Linux TV shell. To add the Android backend:
+
+```bash
+sudo ./scripts/install-waydroid.sh
+sudo waydroid init
+```
+
+Then restart PiTV/Raspberry Pi. Selecting an APK tile installs it with `waydroid app install` when needed and launches the package. HOME on the CEC remote stops the foreground session and returns to PiTV.
+
+> Raspberry Pi / Waydroid hardware compatibility still has to be verified on the exact Pi 4 image/kernel. PiTV detects a missing backend instead of failing the launcher.
+
+## Settings
+
+- Appearance
+- Screensaver
+- Network / Wi-Fi
+- HDMI audio
+- HDMI / CEC
+- Applications / PiTV Store
+- Server Store
+- Android / APK
+- Updates
+- System
+- Power
+- About / Tailscale status
+
+## TV remote behavior
+
+PiTV owns HDMI-CEC. While Kodi or Android is in front, CEC navigation is relayed through `wtype`. HOME always returns to PiTV. Volume and mute are sent to the TV/receiver through CEC.
+
+## Project layout
+
+```text
+pitv/pitv.py             launcher + settings UI
+pitv/apk_backend.py      APK inspector / Waydroid adapter
+system/pitv-helper       restricted privileged actions
+system/pitv-session      Wayland session bootstrap
+system/labwc/            compositor config/autostart
+system/pitv-waydroid-launch Android foreground wrapper
+config/apps.d/            Linux app definitions
+scripts/install-waydroid.sh optional Android runtime setup
+```
+
+## License
+
+MIT.
+
+
+## PiTV Store
+
+The TV app catalog is managed from **Settings → Applications → PiTV Store**.
+
+Initial catalog:
+- Kodi
+- SmartTube
+- Stremio
+- YouTube
+- Spotify
+- Plex
+
+Kodi installs from Ubuntu. SmartTube uses the official ARM64 GitHub release.
+Stremio uses the official Android TV ARM64 APK. YouTube, Spotify and Plex open
+their official Google Play pages inside a Waydroid image with Google Play.
+
+## Server Store
+
+**Settings → Server Store** installs background services without SSH:
+
+- Homebridge — official Homebridge apt repository, web UI on port 8581
+- Tailscale — official Linux installer; login can be started from PiTV
+- Docker Engine — official Docker Ubuntu repository
+- ATVLoadly — Docker container with Avahi, web UI on port 5533
+
+These services keep running when the TV is off and PiTV is in screensaver/CEC
+standby mode.
+
+## In-app updates
+
+**Settings → Updates** manages:
+- PiTV self-update from the GitHub branch
+- PiTV Store + Server Store catalogs
+- installed Linux Store applications
+- Ubuntu package updates
+- PiTV UI restart
+
+Automated check: `.github/workflows/pitv-check.yml` validates Python, shell and Store JSON on PiTV branch pushes.
+
+Waydroid is initialized with the GAPPS image so the official Google Play entries for YouTube, Spotify and Plex can be opened from PiTV Store. Waydroid may require Google Play device certification on first use.

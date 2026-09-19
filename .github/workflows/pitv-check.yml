@@ -4,7 +4,7 @@ on:
   push:
     branches: [pitv-v1]
     paths:
-      - "PiTV/**"
+      - "**"
       - ".github/workflows/pitv-check.yml"
   workflow_dispatch:
 
@@ -15,22 +15,22 @@ jobs:
       - uses: actions/checkout@v4
       - name: Python syntax
         run: |
-          python3 -m py_compile             PiTV/pitv/pitv.py             PiTV/pitv/apk_backend.py             PiTV/pitv/store_backend.py             PiTV/pitv/update_backend.py             PiTV/system/pitv-helper             PiTV/system/pitv-self-update
+          python3 -m py_compile             pitv/pitv.py             pitv/apk_backend.py             pitv/store_backend.py             pitv/update_backend.py             system/pitv-helper             system/pitv-self-update
       - name: Shell syntax
         run: |
-          bash -n PiTV/install.sh
-          bash -n PiTV/uninstall.sh
-          bash -n PiTV/system/pitv-session
-          bash -n PiTV/system/pitv-waydroid-launch
-          bash -n PiTV/scripts/install-waydroid.sh
+          bash -n install.sh
+          bash -n uninstall.sh
+          bash -n system/pitv-session
+          bash -n system/pitv-waydroid-launch
+          bash -n scripts/install-waydroid.sh
       - name: Store JSON
         run: |
           python3 - <<'PY'
           import json
           for path in (
-              "PiTV/store/catalog.json",
-              "PiTV/store/server_catalog.json",
-              "PiTV/config/config.json",
+              "store/catalog.json",
+              "store/server_catalog.json",
+              "config/config.json",
           ):
               with open(path, encoding="utf-8") as f:
                   json.load(f)

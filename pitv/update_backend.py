@@ -2,7 +2,7 @@
 import re
 import urllib.request
 
-PITV_VERSION_URL = "https://raw.githubusercontent.com/CaseyCZ/CaseyCZ/pitv-v1/PiTV/pitv/pitv.py"
+PITV_VERSION_URL = "https://raw.githubusercontent.com/CaseyCZ/CaseyCZ/pitv-standalone/pitv/pitv.py"
 
 
 def remote_pitv_version():

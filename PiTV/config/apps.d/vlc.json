@@ -1,8 +1,0 @@
-{
-  "name": "VLC",
-  "subtitle": "Media player",
-  "icon": "VLC",
-  "kind": "linux",
-  "command": "vlc --fullscreen",
-  "requires": "vlc"
-}

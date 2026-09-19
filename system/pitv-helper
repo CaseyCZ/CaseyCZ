@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json, os, shutil, subprocess, sys, tempfile, urllib.request
 
-ALLOWED_STORE_APT = {"kodi", "vlc"}
+ALLOWED_STORE_APT = {"kodi"}
 
 def out(msg, code=0):
     print(msg)
@@ -241,9 +241,16 @@ elif action == "server-store-install":
     if target == "homebridge":
         run(["apt-get", "update"], timeout=300, env=env)
         run(["apt-get", "-y", "install", "curl", "gnupg", "ca-certificates"], timeout=600, env=env)
-        key_tmp = "/tmp/homebridge-key.gpg"
-        run(["curl", "-fsSL", "https://repo.homebridge.io/KEY.gpg", "-o", key_tmp], timeout=60)
-        run(["gpg", "--dearmor", "--yes", "--output", "/usr/share/keyrings/homebridge.gpg", key_tmp], timeout=60)
+        fd, key_tmp = tempfile.mkstemp(prefix="pitv-homebridge-", suffix=".gpg")
+        os.close(fd)
+        try:
+            run(["curl", "-fsSL", "https://repo.homebridge.io/KEY.gpg", "-o", key_tmp], timeout=60)
+            run(["gpg", "--dearmor", "--yes", "--output", "/usr/share/keyrings/homebridge.gpg", key_tmp], timeout=60)
+        finally:
+            try:
+                os.unlink(key_tmp)
+            except FileNotFoundError:
+                pass
         with open("/etc/apt/sources.list.d/homebridge.list", "w", encoding="utf-8") as h:
             h.write("deb [signed-by=/usr/share/keyrings/homebridge.gpg] https://repo.homebridge.io stable main\n")
         run(["apt-get", "update"], timeout=300, env=env)
@@ -254,9 +261,17 @@ elif action == "server-store-install":
     if target == "tailscale":
         run(["apt-get", "update"], timeout=300, env=env)
         run(["apt-get", "-y", "install", "curl", "ca-certificates"], timeout=600, env=env)
-        script = "/tmp/tailscale-install.sh"
-        run(["curl", "-fsSL", "https://tailscale.com/install.sh", "-o", script], timeout=60)
-        run(["sh", script], timeout=1200, env=env)
+        fd, script = tempfile.mkstemp(prefix="pitv-tailscale-", suffix=".sh")
+        os.close(fd)
+        try:
+            run(["curl", "-fsSL", "https://tailscale.com/install.sh", "-o", script], timeout=60)
+            os.chmod(script, 0o700)
+            run(["sh", script], timeout=1200, env=env)
+        finally:
+            try:
+                os.unlink(script)
+            except FileNotFoundError:
+                pass
         subprocess.run(["systemctl", "enable", "--now", "tailscaled"], check=False)
         out("Tailscale nainstalován · přihlášení dokonči přes položku Tailscale")
 
@@ -268,24 +283,24 @@ elif action == "server-store-install":
              "-o", "/etc/apt/keyrings/docker.asc"], timeout=60)
         os.chmod("/etc/apt/keyrings/docker.asc", 0o644)
 
-        codename = ""
+        os_release = {}
         try:
             for line in open("/etc/os-release", encoding="utf-8"):
-                if line.startswith("UBUNTU_CODENAME="):
-                    codename = line.split("=",1)[1].strip().strip('"')
-                    break
-                if line.startswith("VERSION_CODENAME=") and not codename:
-                    codename = line.split("=",1)[1].strip().strip('"')
+                if "=" in line:
+                    k, v = line.rstrip().split("=", 1)
+                    os_release[k] = v.strip().strip('"')
         except Exception:
             pass
-        if not codename:
-            out("Nelze zjistit Ubuntu codename pro Docker repository", 2)
+        distro = os_release.get("ID", "")
+        codename = os_release.get("UBUNTU_CODENAME") or os_release.get("VERSION_CODENAME", "")
+        if distro not in ("ubuntu", "debian") or not codename:
+            out("Docker Store podporuje Ubuntu/Debian s rozpoznaným codename", 2)
 
         arch = subprocess.check_output(["dpkg", "--print-architecture"], text=True).strip()
         with open("/etc/apt/sources.list.d/docker.sources", "w", encoding="utf-8") as h:
             h.write(
                 "Types: deb\n"
-                "URIs: https://download.docker.com/linux/ubuntu\n"
+                f"URIs: https://download.docker.com/linux/{distro}\n"
                 f"Suites: {codename}\n"
                 "Components: stable\n"
                 f"Architectures: {arch}\n"

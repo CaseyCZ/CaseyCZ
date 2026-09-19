@@ -1,4 +1,4 @@
-# PiTV 1.0
+# PiTV 1.2
 
 PiTV is a lightweight TV shell for **Ubuntu Server ARM64 on Raspberry Pi 4**. The Raspberry Pi stays a 24/7 server while HDMI shows a remote-friendly launcher.
 
@@ -15,6 +15,8 @@ PiTV is a lightweight TV shell for **Ubuntu Server ARM64 on Raspberry Pi 4**. Th
 - APK discovery from `/var/lib/pitv/apks/` and `~/PiTV/APKs/`
 - Waydroid backend: install APK, launch Android app, full Android UI
 - application visibility settings
+- PiTV Store: Kodi, SmartTube, Stremio, YouTube, Spotify and Plex
+- Server Store: Homebridge, Tailscale, Docker Engine and ATVLoadly
 - system health, temperature, RAM, disk, uptime and APT updates
 - restart/power-off confirmations
 - Tailscale status shown in About; Tailscale itself stays a background service
@@ -72,9 +74,11 @@ Then restart PiTV/Raspberry Pi. Selecting an APK tile installs it with `waydroid
 - Network / Wi-Fi
 - HDMI audio
 - HDMI / CEC
-- Applications
+- Applications / PiTV Store
+- Server Store
 - Android / APK
-- System / Updates
+- Updates
+- System
 - Power
 - About / Tailscale status
 
@@ -98,3 +102,41 @@ scripts/install-waydroid.sh optional Android runtime setup
 ## License
 
 MIT.
+
+
+## PiTV Store
+
+The TV app catalog is managed from **Settings → Applications → PiTV Store**.
+
+Initial catalog:
+- Kodi
+- SmartTube
+- Stremio
+- YouTube
+- Spotify
+- Plex
+
+Kodi installs from Ubuntu. SmartTube uses the official ARM64 GitHub release.
+Stremio uses the official Android TV ARM64 APK. YouTube, Spotify and Plex open
+their official Google Play pages inside a Waydroid image with Google Play.
+
+## Server Store
+
+**Settings → Server Store** installs background services without SSH:
+
+- Homebridge — official Homebridge apt repository, web UI on port 8581
+- Tailscale — official Linux installer; login can be started from PiTV
+- Docker Engine — official Docker Ubuntu repository
+- ATVLoadly — Docker container with Avahi, web UI on port 5533
+
+These services keep running when the TV is off and PiTV is in screensaver/CEC
+standby mode.
+
+## In-app updates
+
+**Settings → Updates** manages:
+- PiTV self-update from the GitHub branch
+- PiTV Store + Server Store catalogs
+- installed Linux Store applications
+- Ubuntu package updates
+- PiTV UI restart

@@ -61,3 +61,20 @@ Tyto body jsou poslední část před označením Raspberry Pi 4 build jako hard
 
 - `PiTV Check` — rychlá automatická kontrola při push.
 - `PiTV Online Smoke` — ruční plný instalační test.
+
+
+## Repo hygiene
+
+- aktivní PiTV větev: `pitv-standalone`,
+- výchozí `Master` je profilová větev účtu CaseyCZ a není součástí PiTV runtime,
+- `pitv-v1` je historická větev; `pitv-standalone` je vůči ní pouze napřed a nic z ní nepotřebuje,
+- žádné nalezené hardcoded tokeny, privátní klíče ani credentials,
+- CI workflow používají minimální `contents: read` oprávnění a concurrency,
+- README profilu CZ/EN odkazuje na aktuální PiTV 1.3 větev.
+
+## Kontrola externích Store zdrojů
+
+K 2026-09-19:
+
+- Stremio Android TV ARM64: katalog PiTV používá oficiální verzi 1.10.4, která je stále uvedená jako aktuální manual-install build na stremio.com.
+- SmartTube: katalog používá dynamický latest-release lookup; aktuální stable release 32.47 obsahuje `SmartTube_stable_32.47_arm64-v8a.apk`.

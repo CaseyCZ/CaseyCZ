@@ -28,8 +28,10 @@ elif [ "$TARGET" = "--play-store" ]; then
   if ! waydroid app list 2>/dev/null | grep -Fq "com.android.vending"; then
     exit 7
   fi
-  waydroid shell am start -a android.intent.action.VIEW -d "market://details?id=$PACKAGE" >/dev/null 2>&1 || \
+  if ! printf '%s' "{\"package\":\"$PACKAGE\"}" | \
+      sudo -n /usr/local/libexec/pitv-helper waydroid-open-play-store >/dev/null 2>&1; then
     waydroid app launch com.android.vending || exit 8
+  fi
 else
   if [ -n "$APK" ] && [ -f "$APK" ]; then
     if ! waydroid app list 2>/dev/null | grep -Fq "$TARGET"; then

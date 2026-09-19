@@ -53,8 +53,8 @@ elif action == "waydroid-install":
     installer = "/usr/local/libexec/pitv-install-waydroid"
     if not os.path.isfile(installer):
         out("Waydroid instalátor PiTV není nainstalovaný", 2)
-    text = run([installer], timeout=1800)
-    out(text or "Waydroid + Google Play nainstalován")
+    run([installer], timeout=1800)
+    out("Waydroid + Google Play nainstalován")
 
 elif action == "waydroid-container-start":
     if shutil.which("waydroid") is None:

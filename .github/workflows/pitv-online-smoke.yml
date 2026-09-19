@@ -80,6 +80,16 @@ jobs:
           assert app.cec_standby_sent is False
           app.external_kind = None
 
+          # On a clean runner Waydroid is absent; Android settings must offer
+          # a one-click install path and open PiTV's confirmation dialog.
+          if not __import__("shutil").which("waydroid"):
+              app.page = "android"
+              app.android_selected = 0
+              app.handle_key(pygame.K_RETURN)
+              assert app.confirm_active
+              assert "Waydroid" in app.confirm_title
+              app.confirm_active = False
+
           pygame.quit()
           print("PiTV UI smoke OK")
           PY
@@ -123,6 +133,17 @@ jobs:
           rc=$?
           set -e
           test "$rc" -eq 124 -o "$rc" -eq 0
+
+      - name: Uninstall PiTV cleanly
+        run: |
+          sudo ./uninstall.sh
+          test ! -e /opt/pitv
+          test ! -e /etc/pitv
+          test ! -e /home/pitv/.bash_profile
+          test ! -e /usr/local/bin/pitv-session
+          test ! -e /usr/local/libexec/pitv-helper
+          test -d /home/pitv/.config/pitv
+          test -d /home/pitv/PiTV/APKs
 
   server-store-arm64:
     name: Server Store install (ARM64)

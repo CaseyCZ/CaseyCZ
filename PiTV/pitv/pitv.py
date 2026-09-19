@@ -20,12 +20,13 @@ from store_backend import (download_direct_apk, download_github_apk,
 from update_backend import is_newer, remote_pitv_version
 
 APP_NAME = "PiTV"
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 
 SYSTEM_CONFIG = Path("/etc/pitv/config.json")
 USER_CONFIG = Path.home() / ".config/pitv/config.json"
 SYSTEM_APPS = Path("/etc/pitv/apps.d")
 USER_APPS = Path.home() / ".config/pitv/apps.d"
+SYSTEM_SERVER_CATALOG = Path("/etc/pitv/store/server_catalog.json")
 LAUNCH_FILE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "pitv-launch.json"
 
 DEFAULT_CONFIG = {
@@ -128,6 +129,11 @@ def load_config():
 def save_user_config(cfg):
     USER_CONFIG.parent.mkdir(parents=True, exist_ok=True)
     USER_CONFIG.write_text(json.dumps(cfg, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def load_server_catalog():
+    data = safe_json(SYSTEM_SERVER_CATALOG, {})
+    return list(data.get("services", [])) if isinstance(data, dict) else []
 
 
 def cmd_output(args, timeout=2):
@@ -553,6 +559,11 @@ class PiTV:
         self.store_states = {}
         self.store_refreshing = False
         self.store_busy_id = ""
+        self.server_store_selected = 0
+        self.server_store_catalog = load_server_catalog()
+        self.server_store_states = {}
+        self.server_store_refreshing = False
+        self.server_store_busy_id = ""
         self.updates_selected = 0
         self.remote_pitv = ""
         self.updates_status = "Nezkontrolováno"
@@ -1081,6 +1092,7 @@ class PiTV:
         ("Zvuk", "HDMI audio a hlasitost TV"),
         ("HDMI / CEC", "TV ovladač a ovládání televize"),
         ("Aplikace", "PiTV Store a aplikace na domovské obrazovce"),
+        ("Server Store", "Homebridge, Tailscale, Docker a ATVLoadly"),
         ("Android / APK", "APK inspector a Waydroid backend"),
         ("Aktualizace", "PiTV, Store aplikace a Ubuntu"),
         ("Systém", "Stav Raspberry Pi"),
@@ -1092,8 +1104,8 @@ class PiTV:
         self.header("Nastavení", "← Back / Esc pro návrat")
         margin = int(self.w*.09)
         top = int(self.h*.18)
-        row_h = int(self.h*.061)
-        gap = int(self.h*.006)
+        row_h = int(self.h*.055)
+        gap = int(self.h*.005)
         width = int(self.w*.82)
         for i, (name, desc) in enumerate(self.SETTINGS):
             selected = i == self.settings_selected
@@ -1386,6 +1398,127 @@ class PiTV:
 
         threading.Thread(target=worker, daemon=True).start()
 
+    SERVER_STATE_LABELS = {
+        "active": "Běží",
+        "running": "Běží",
+        "inactive": "Nainstalováno · neběží",
+        "exited": "Nainstalováno · zastaveno",
+        "created": "Nainstalováno · zastaveno",
+        "dead": "Nainstalováno · neběží",
+    }
+
+    def refresh_server_store_async(self):
+        if self.server_store_refreshing:
+            return
+        self.server_store_refreshing = True
+        self.server_store_catalog = load_server_catalog()
+
+        def worker():
+            ok, msg = run_privileged("server-store-status", {}, 30)
+            if ok:
+                try:
+                    self.server_store_states = json.loads(msg)
+                except Exception:
+                    self.server_store_states = {}
+            self.server_store_refreshing = False
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def server_store_status_label(self, item):
+        sid = item.get("id", "")
+        if self.server_store_busy_id == sid:
+            return "Instaluji…"
+
+        state = self.server_store_states.get(sid, {})
+        if not state:
+            return "Kontroluji…"
+        if not state.get("installed"):
+            requires = item.get("requires", [])
+            if requires:
+                return "Instalovat · vyžaduje " + ", ".join(requires)
+            return "Instalovat"
+
+        if sid == "tailscale":
+            if state.get("authenticated"):
+                return f"Běží · {state.get('ip','')}".strip(" ·")
+            return "Nainstalováno · přihlásit"
+
+        label = self.SERVER_STATE_LABELS.get(state.get("state", ""), "Nainstalováno")
+        port = item.get("web_port")
+        if port:
+            ips = get_ipv4()
+            if ips:
+                label += f" · {ips[0][1]}:{port}"
+        return label
+
+    def draw_server_store(self):
+        items = self.server_store_catalog
+        if not items:
+            self.draw_rows("Server Store", "Služby běžící na pozadí",
+                           [("Server Store", "Katalog je prázdný")], 0,
+                           "Katalog: /etc/pitv/store/server_catalog.json")
+            return
+
+        rows = [(item.get("name","Služba"), self.server_store_status_label(item))
+                for item in items]
+        visible = 8
+        start = max(0, min(self.server_store_selected-visible//2,
+                           max(0, len(rows)-visible)))
+        self.draw_rows(
+            "Server Store",
+            "Instalace serverových služeb na pozadí",
+            rows[start:start+visible],
+            self.server_store_selected-start,
+            "OK = nainstalovat / dokončit nastavení • služby běží i když je TV vypnutá"
+        )
+
+    def install_server_store_item(self, item):
+        sid = item.get("id", "")
+        if not sid or self.server_store_busy_id:
+            return
+
+        state = self.server_store_states.get(sid, {})
+        if state.get("installed"):
+            if sid == "tailscale" and not state.get("authenticated"):
+                self.server_store_busy_id = sid
+                self.show_toast("Připravuji přihlášení Tailscale…", 4)
+
+                def login_worker():
+                    ok, msg = run_privileged("tailscale-login", {}, 30)
+                    self.server_store_busy_id = ""
+                    self.show_toast(msg, 8)
+                    self.refresh_server_store_async()
+
+                threading.Thread(target=login_worker, daemon=True).start()
+                return
+
+            port = item.get("web_port")
+            if port:
+                ips = get_ipv4()
+                if ips:
+                    self.show_toast(f"{item.get('name')}: http://{ips[0][1]}:{port}", 7)
+                    return
+            self.show_toast(f"{item.get('name','Služba')} už je nainstalovaná")
+            return
+
+        requires = item.get("requires", [])
+        for dep in requires:
+            dep_state = self.server_store_states.get(dep, {})
+            if not dep_state.get("installed"):
+                self.show_toast(f"Nejdřív nainstaluj {dep}", 5)
+                return
+
+        self.server_store_busy_id = sid
+        self.show_toast(f"Instaluji {item.get('name','službu')}…", 5)
+
+        def worker():
+            ok, msg = run_privileged("server-store-install", {"target": sid}, 1800)
+            self.server_store_busy_id = ""
+            self.show_toast(msg, 7)
+            self.refresh_server_store_async()
+
+        threading.Thread(target=worker, daemon=True).start()
+
     def android_items(self):
         apks = [a for a in self.apps if a.get("kind") == "apk"]
         runtime = "Dostupný" if waydroid_available() else "Nenainstalován"
@@ -1627,6 +1760,7 @@ class PiTV:
         elif self.page == "cec": self.draw_cec()
         elif self.page == "apps": self.draw_apps_settings()
         elif self.page == "store": self.draw_store()
+        elif self.page == "server_store": self.draw_server_store()
         elif self.page == "android": self.draw_android()
         elif self.page == "updates": self.draw_updates()
         elif self.page == "system": self.draw_system()
@@ -1727,7 +1861,7 @@ class PiTV:
 
     def enter_settings_item(self):
         pages = ["appearance", "screensaver", "network", "audio", "cec",
-                 "apps", "android", "updates", "system", "power", "about"]
+                 "apps", "server_store", "android", "updates", "system", "power", "about"]
         self.page = pages[self.settings_selected]
         self.sub_selected = 0
         if self.page == "network":
@@ -1740,6 +1874,9 @@ class PiTV:
             self.cec_selected = 0
         elif self.page == "apps":
             self.apps_selected = 0
+        elif self.page == "server_store":
+            self.server_store_selected = 0
+            self.refresh_server_store_async()
         elif self.page == "android":
             self.android_selected = 0
         elif self.page == "updates":
@@ -1803,6 +1940,9 @@ class PiTV:
                 return
             if self.page == "store":
                 self.page = "apps"
+                return
+            if self.page == "server_store":
+                self.page = "settings"
                 return
             if self.page == "settings":
                 self.page = "home"; self.selected = max(0, len(self.home_items())-1)
@@ -1951,6 +2091,16 @@ class PiTV:
                 self.store_selected = min(max(0, len(items)-1), self.store_selected+1)
             elif key in (pygame.K_RETURN, pygame.K_KP_ENTER) and items:
                 self.install_store_item(items[self.store_selected])
+
+        elif self.page == "server_store":
+            items = self.server_store_catalog
+            if key == pygame.K_UP:
+                self.server_store_selected = max(0, self.server_store_selected-1)
+            elif key == pygame.K_DOWN:
+                self.server_store_selected = min(max(0, len(items)-1),
+                                                 self.server_store_selected+1)
+            elif key in (pygame.K_RETURN, pygame.K_KP_ENTER) and items:
+                self.install_server_store_item(items[self.server_store_selected])
 
         elif self.page == "android":
             rows = self.android_items()

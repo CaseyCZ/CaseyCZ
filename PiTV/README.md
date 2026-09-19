@@ -140,3 +140,5 @@ standby mode.
 - installed Linux Store applications
 - Ubuntu package updates
 - PiTV UI restart
+
+Automated check: `.github/workflows/pitv-check.yml` validates Python, shell and Store JSON on PiTV branch pushes.

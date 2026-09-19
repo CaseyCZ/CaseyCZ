@@ -159,3 +159,68 @@ jobs:
         run: |
           echo '{}' | sudo -u pitv sudo -n /usr/local/libexec/pitv-helper server-store-status | tee /tmp/server-status.json
           python3 -m json.tool /tmp/server-status.json
+
+
+  android-store-sources:
+    name: Android Store APK sources (ARM64)
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install APK inspector
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq aapt
+
+      - name: Download and inspect Android Store APKs
+        env:
+          PYTHONPATH: pitv
+          HOME: /tmp/pitv-store-test
+        run: |
+          mkdir -p "$HOME"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          from apk_backend import inspect_apk
+          from store_backend import download_direct_apk, download_github_apk
+
+          catalog = json.loads(Path("store/catalog.json").read_text(encoding="utf-8"))
+          tested = []
+
+          for item in catalog["apps"]:
+              installer = item.get("installer", {})
+              kind = installer.get("type")
+              if kind == "github_release_apk":
+                  path, version = download_github_apk(item)
+              elif kind == "direct_apk":
+                  path, version = download_direct_apk(item)
+              else:
+                  continue
+
+              meta = inspect_apk(path)
+              expected = installer.get("expected_package", "")
+              print(item["name"], "version", version, "package", meta.get("package"), "file", path)
+              assert Path(path).is_file() and Path(path).stat().st_size > 100000
+              assert meta.get("package"), f"{item['name']}: APK package not detected"
+              if expected:
+                  assert meta["package"] == expected, (
+                      f"{item['name']}: {meta['package']} != {expected}"
+                  )
+              tested.append(item["id"])
+
+          assert "smarttube" in tested
+          assert "stremio" in tested
+
+          play_entries = {
+              x["id"]: x["installer"].get("package")
+              for x in catalog["apps"]
+              if x.get("installer", {}).get("type") == "play_store"
+          }
+          assert play_entries["youtube-tv"] == "com.google.android.youtube.tv"
+          assert play_entries["spotify-tv"] == "com.spotify.tv.android"
+          assert play_entries["plex"] == "com.plexapp.android"
+          print("Android Store source smoke OK")
+          PY

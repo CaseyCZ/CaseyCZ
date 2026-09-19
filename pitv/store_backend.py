@@ -104,7 +104,7 @@ def _github_latest_release(repo):
     req = urllib.request.Request(
         url,
         headers={
-            "User-Agent": "PiTV-Store/1.1",
+            "User-Agent": "PiTV-Store/1.3",
             "Accept": "application/vnd.github+json",
         },
     )
@@ -135,7 +135,7 @@ def download_github_apk(item, progress=None):
     dest = USER_APK_DIR / f"store-{safe_id}-{name}"
     tmp = dest.with_suffix(dest.suffix + ".part")
 
-    req = urllib.request.Request(url, headers={"User-Agent": "PiTV-Store/1.1"})
+    req = urllib.request.Request(url, headers={"User-Agent": "PiTV-Store/1.3"})
     with urllib.request.urlopen(req, timeout=60) as src, open(tmp, "wb") as out:
         total = int(src.headers.get("Content-Length", "0") or 0)
         done = 0
@@ -175,7 +175,7 @@ def download_direct_apk(item, progress=None):
     dest = USER_APK_DIR / f"store-{safe_id}-{filename}"
     tmp = dest.with_suffix(dest.suffix + ".part")
 
-    req = urllib.request.Request(url, headers={"User-Agent": "PiTV-Store/1.1"})
+    req = urllib.request.Request(url, headers={"User-Agent": "PiTV-Store/1.3"})
     with urllib.request.urlopen(req, timeout=60) as src, open(tmp, "wb") as out:
         total = int(src.headers.get("Content-Length", "0") or 0)
         done = 0

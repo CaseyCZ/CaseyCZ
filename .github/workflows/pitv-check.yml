@@ -55,14 +55,17 @@ jobs:
           from pitv import PiTV, VERSION
 
           app = PiTV()
-          for page in (
+          pages = (
               "home", "settings", "appearance", "screensaver", "network",
               "audio", "cec", "apps", "store", "server_store", "android",
               "updates", "system", "power", "about",
-          ):
-              app.page = page
-              app.draw()
-              print("render OK", page)
+          )
+          for theme in ("apple_dark", "apple_light"):
+              app.cfg["theme"] = theme
+              for page in pages:
+                  app.page = page
+                  app.draw()
+                  print("render OK", theme, page)
 
           assert len(app.SETTINGS) == 12
           pygame.quit()

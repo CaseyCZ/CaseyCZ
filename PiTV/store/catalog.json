@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "apps": [
+    {
+      "id": "kodi",
+      "name": "Kodi",
+      "description": "Open-source media center for TV.",
+      "category": "Media",
+      "platform": "linux",
+      "icon": "KODI",
+      "installer": {"type": "apt", "package": "kodi"}
+    },
+    {
+      "id": "vlc",
+      "name": "VLC",
+      "description": "Video and network stream player.",
+      "category": "Media",
+      "platform": "linux",
+      "icon": "VLC",
+      "installer": {"type": "apt", "package": "vlc"}
+    },
+    {
+      "id": "smarttube",
+      "name": "SmartTube",
+      "description": "Android TV YouTube client. Official GitHub release.",
+      "category": "Video",
+      "platform": "android",
+      "icon": "ST",
+      "installer": {
+        "type": "github_release_apk",
+        "repo": "yuliskov/SmartTube",
+        "asset_regex": "^SmartTube_stable_.*_arm64-v8a\\.apk$"
+      }
+    },
+    {
+      "id": "jellyfin-tv",
+      "name": "Jellyfin Android TV",
+      "description": "Official Jellyfin client for Android TV.",
+      "category": "Media",
+      "platform": "android",
+      "icon": "JF",
+      "installer": {
+        "type": "github_release_apk",
+        "repo": "jellyfin/jellyfin-androidtv",
+        "asset_regex": "^jellyfin-androidtv-.*-release\\.apk$"
+      }
+    }
+  ]
+}

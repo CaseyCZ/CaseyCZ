@@ -466,16 +466,26 @@ def count_updates():
     except Exception:
         return None
 
+_CEC_MANAGER = None
+
+
 def cec_available():
     return shutil.which("cec-client") is not None
 
 
 def cec_send(commands):
-    """Send one or more commands to libCEC in single-command mode."""
+    """Send CEC commands through PiTV's persistent adapter connection.
+
+    Falls back to one-shot cec-client only before the persistent client is ready.
+    """
     if not cec_available():
         return False, "cec-client není nainstalovaný"
     if isinstance(commands, str):
         commands = [commands]
+
+    manager = _CEC_MANAGER
+    if manager is not None and manager.is_ready():
+        return manager.send(commands)
 
     outputs = []
     for command in commands:
@@ -537,15 +547,35 @@ class CECReader(threading.Thread):
         super().__init__(daemon=True)
         self.event_queue = event_queue
         self.proc = None
+        self.write_lock = threading.Lock()
+
+    def is_ready(self):
+        return self.proc is not None and self.proc.poll() is None and self.proc.stdin is not None
+
+    def send(self, commands):
+        if isinstance(commands, str):
+            commands = [commands]
+        if not self.is_ready():
+            return False, "CEC klient ještě není připravený"
+        try:
+            with self.write_lock:
+                for command in commands:
+                    self.proc.stdin.write(str(command).strip() + "\n")
+                self.proc.stdin.flush()
+            return True, "CEC příkaz odeslán"
+        except Exception as e:
+            return False, f"CEC zápis selhal: {e}"
 
     def run(self):
+        global _CEC_MANAGER
         if shutil.which("cec-client") is None:
             return
+        _CEC_MANAGER = self
         try:
             # libCEC emits "key pressed:" at DEBUG level (16).
             self.proc = subprocess.Popen(
                 ["cec-client", "-d", "16", "-t", "p", "-o", "PiTV"],
-                stdin=subprocess.DEVNULL,
+                stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -563,6 +593,9 @@ class CECReader(threading.Thread):
             pass
 
     def stop(self):
+        global _CEC_MANAGER
+        if _CEC_MANAGER is self:
+            _CEC_MANAGER = None
         try:
             if self.proc:
                 self.proc.terminate()

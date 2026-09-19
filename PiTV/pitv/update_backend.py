@@ -8,16 +8,16 @@ PITV_VERSION_URL = "https://raw.githubusercontent.com/CaseyCZ/CaseyCZ/pitv-v1/Pi
 def remote_pitv_version():
     req = urllib.request.Request(
         PITV_VERSION_URL,
-        headers={"User-Agent": "PiTV-Updater/1.1"},
+        headers={"User-Agent": "PiTV-Updater/1.2"},
     )
     with urllib.request.urlopen(req, timeout=20) as r:
         text = r.read().decode("utf-8", errors="replace")
-    m = re.search(r'^VERSION\\s*=\\s*["\\\']([^"\\\']+)["\\\']', text, re.M)
+    m = re.search(r"^VERSION\s*=\s*['\"]([^'\"]+)['\"]", text, re.M)
     return m.group(1) if m else ""
 
 
 def version_tuple(value):
-    nums = re.findall(r"\\d+", str(value))
+    nums = re.findall(r"\d+", str(value))
     return tuple(int(x) for x in nums[:4]) or (0,)
 
 

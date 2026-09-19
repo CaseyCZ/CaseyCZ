@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -u
+TARGET="${1:-}"
+[ -n "$TARGET" ] || exit 2
+
+cleanup() {
+  waydroid session stop >/dev/null 2>&1 || true
+}
+trap cleanup EXIT TERM INT HUP
+
+sudo -n /usr/local/libexec/pitv-helper waydroid-container-start </dev/null >/dev/null 2>&1 || true
+waydroid session start >/tmp/pitv-waydroid-session.log 2>&1 &
+SESSION_PID=$!
+
+for _ in $(seq 1 40); do
+  if waydroid status 2>/dev/null | grep -qi 'RUNNING'; then break; fi
+  sleep 0.5
+done
+
+if [ "$TARGET" = "--full-ui" ]; then
+  waydroid show-full-ui
+else
+  waydroid app launch "$TARGET"
+fi
+
+# Keep the launcher wrapper alive so PiTV HOME can terminate the whole app session.
+while kill -0 "$SESSION_PID" 2>/dev/null; do sleep 1; done

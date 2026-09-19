@@ -47,6 +47,15 @@ elif action == "wifi-disconnect":
     run(["nmcli", "device", "disconnect", dev], timeout=20)
     out(f"{dev} odpojeno")
 
+elif action == "waydroid-install":
+    if shutil.which("waydroid") is not None:
+        out("Waydroid už je nainstalovaný")
+    installer = "/usr/local/libexec/pitv-install-waydroid"
+    if not os.path.isfile(installer):
+        out("Waydroid instalátor PiTV není nainstalovaný", 2)
+    text = run([installer], timeout=1800)
+    out(text or "Waydroid + Google Play nainstalován")
+
 elif action == "waydroid-container-start":
     if shutil.which("waydroid") is None:
         out("Waydroid není nainstalovaný", 2)

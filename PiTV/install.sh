@@ -86,7 +86,7 @@ echo
 echo "Test bez restartu (z lokální tty): sudo systemctl restart getty@tty1"
 echo "SSH zůstává normálně dostupné."
 echo
-echo "Kodi, VLC a Android TV aplikace můžeš teď instalovat přímo z PiTV Store."
+echo "TV aplikace instaluj z PiTV Store; Homebridge, Tailscale, Docker a ATVLoadly ze Server Store."
 echo
 echo "Pak restartuj:"
 echo "  sudo reboot"

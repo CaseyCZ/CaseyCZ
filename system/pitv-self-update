@@ -21,7 +21,7 @@ if os.geteuid() != 0:
 with tempfile.TemporaryDirectory(prefix="pitv-update-") as td:
     td = Path(td)
     archive = td / "pitv.zip"
-    req = urllib.request.Request(ARCHIVE_URL, headers={"User-Agent": "PiTV-Updater/1.2"})
+    req = urllib.request.Request(ARCHIVE_URL, headers={"User-Agent": "PiTV-Updater/1.3"})
     try:
         with urllib.request.urlopen(req, timeout=60) as src, open(archive, "wb") as out:
             shutil.copyfileobj(src, out)

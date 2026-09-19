@@ -1342,7 +1342,7 @@ class PiTV:
     WTYPE_KEYS = {
         pygame.K_UP: "Up", pygame.K_DOWN: "Down", pygame.K_LEFT: "Left",
         pygame.K_RIGHT: "Right", pygame.K_RETURN: "Return", pygame.K_KP_ENTER: "Return",
-        pygame.K_ESCAPE: "ESC", pygame.K_SPACE: "space",
+        pygame.K_ESCAPE: "Escape", pygame.K_SPACE: "space",
     }
 
     def relay_to_external(self, key):
@@ -1390,27 +1390,21 @@ class PiTV:
         if not waydroid_available():
             self.show_toast("Waydroid není nainstalovaný — viz Android / APK", 5)
             return
-        self.show_toast(f"Připravuji {app['name']}…", 4)
-        def worker():
-            ok, msg = ensure_apk_installed(app)
-            if not ok:
-                self.show_toast(msg, 6)
-                return
-            package = app.get("package", "")
-            if not package:
-                self.show_toast("APK nemá rozpoznaný package name", 5)
-                return
-            try:
-                self.external_proc = subprocess.Popen(
-                    ["/usr/local/bin/pitv-waydroid-launch", package],
-                    env=os.environ.copy(), start_new_session=True,
-                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-                )
-                self.external_kind = "apk"
-                self.show_toast(f"Spouštím {app['name']}")
-            except Exception as e:
-                self.show_toast(f"Waydroid: {e}", 5)
-        threading.Thread(target=worker, daemon=True).start()
+        package = app.get("package", "")
+        apk_path = app.get("apk_path", "")
+        if not package:
+            self.show_toast("APK nemá rozpoznaný package name", 5)
+            return
+        try:
+            self.external_proc = subprocess.Popen(
+                ["/usr/local/bin/pitv-waydroid-launch", package, apk_path],
+                env=os.environ.copy(), start_new_session=True,
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            )
+            self.external_kind = "apk"
+            self.show_toast(f"Připravuji {app['name']}…")
+        except Exception as e:
+            self.show_toast(f"Waydroid: {e}", 5)
 
     def launch(self, app):
         if app.get("kind") == "apk":

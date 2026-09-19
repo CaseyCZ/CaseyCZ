@@ -52,10 +52,10 @@ def _waydroid_packages():
         )
         packages = set()
         for line in p.stdout.splitlines():
-            m = re.search(r"package(?:Name)?\\s*[:=]\\s*([A-Za-z0-9_.]+)", line, re.I)
+            m = re.search(r"package(?:Name)?\s*[:=]\s*([A-Za-z0-9_.]+)", line, re.I)
             if m:
                 packages.add(m.group(1))
-            elif re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z0-9_]+)+", line.strip()):
+            elif re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z0-9_]+)+", line.strip()):
                 packages.add(line.strip())
         return packages
     except Exception:

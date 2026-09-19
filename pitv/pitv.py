@@ -471,36 +471,35 @@ def cec_available():
 
 
 def cec_send(commands):
-    """Send one or more commands to libCEC.
-
-    Returns (ok, message). cec-client single-command mode is intentionally
-    used so PiTV does not need a long-lived privileged helper.
-    """
+    """Send one or more commands to libCEC in single-command mode."""
     if not cec_available():
         return False, "cec-client není nainstalovaný"
     if isinstance(commands, str):
         commands = [commands]
-    payload = "\n".join(commands) + "\n"
-    try:
-        p = subprocess.run(
-            ["cec-client", "-s", "-d", "1"],
-            input=payload,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            timeout=6,
-            check=False,
-        )
-        out = (p.stdout or "").strip()
-        # libCEC can return 0 even when the target device ignores a command;
-        # this only confirms that the command was submitted to the CEC stack.
-        if p.returncode == 0:
-            return True, out[-180:] if out else "CEC příkaz odeslán"
-        return False, out[-180:] if out else f"CEC chyba {p.returncode}"
-    except subprocess.TimeoutExpired:
-        return False, "CEC timeout"
-    except Exception as e:
-        return False, f"CEC chyba: {e}"
+
+    outputs = []
+    for command in commands:
+        try:
+            p = subprocess.run(
+                ["cec-client", "-s", "-d", "1"],
+                input=str(command).strip() + "\n",
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                timeout=6,
+                check=False,
+            )
+            out = (p.stdout or "").strip()
+            if out:
+                outputs.append(out[-180:])
+            if p.returncode != 0:
+                return False, out[-180:] if out else f"CEC chyba {p.returncode}"
+        except subprocess.TimeoutExpired:
+            return False, "CEC timeout"
+        except Exception as e:
+            return False, f"CEC chyba: {e}"
+
+    return True, outputs[-1] if outputs else "CEC příkaz odeslán"
 
 
 def cec_tv_on():

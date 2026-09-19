@@ -69,6 +69,15 @@ jobs:
           app.handle_key(pygame.K_RETURN)
           assert app.page == "store"
 
+          # Playback must suspend PiTV's own idle/screensaver timer.
+          app.external_kind = "linux"
+          app.screensaver_stage = "clock"
+          app.cec_standby_sent = True
+          app.update_idle_state()
+          assert app.screensaver_stage == "off"
+          assert app.cec_standby_sent is False
+          app.external_kind = None
+
           pygame.quit()
           print("PiTV UI smoke OK")
           PY

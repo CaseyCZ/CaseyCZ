@@ -1,7 +1,7 @@
 {
-  "theme": "dark",
+  "theme": "apple_dark",
   "accent": "ioshub-blue",
-  "tile_scale": 1.0,
+  "tile_scale": 1,
   "cec_enabled": true,
   "show_clock": true,
   "cec_wake_on_start": false,

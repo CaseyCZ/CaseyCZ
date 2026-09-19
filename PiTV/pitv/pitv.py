@@ -12,11 +12,13 @@ import re
 from pathlib import Path
 
 import pygame
-from apk_backend import (discover_apks, ensure_apk_installed, waydroid_available,
-                         waydroid_status, tailscale_info)
+from apk_backend import (discover_apks, ensure_apk_installed, inspect_apk,
+                         waydroid_available, waydroid_status, tailscale_info)
+from store_backend import (download_github_apk, load_store_catalog,
+                           mark_android_installed, store_state)
 
 APP_NAME = "PiTV"
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 SYSTEM_CONFIG = Path("/etc/pitv/config.json")
 USER_CONFIG = Path.home() / ".config/pitv/config.json"
@@ -544,6 +546,11 @@ class PiTV:
         self.apps_selected = 0
         self.system_selected = 0
         self.android_selected = 0
+        self.store_selected = 0
+        self.store_catalog = load_store_catalog()
+        self.store_states = {}
+        self.store_refreshing = False
+        self.store_busy_id = ""
         self.external_proc = None
         self.external_kind = None
 
@@ -1067,7 +1074,7 @@ class PiTV:
         ("Síť", "Ethernet, Wi‑Fi a IP adresy"),
         ("Zvuk", "HDMI audio a hlasitost TV"),
         ("HDMI / CEC", "TV ovladač a ovládání televize"),
-        ("Aplikace", "Zobrazení aplikací na domovské obrazovce"),
+        ("Aplikace", "PiTV Store a aplikace na domovské obrazovce"),
         ("Android / APK", "APK inspector a Waydroid backend"),
         ("Systém", "Stav Raspberry Pi a aktualizace"),
         ("Napájení", "Restart nebo vypnutí"),
@@ -1209,7 +1216,7 @@ class PiTV:
 
     def app_items(self):
         hidden = set(self.cfg.get("hidden_apps", []))
-        rows = []
+        rows = [{"name": "PiTV Store", "store": True, "visible": True}]
         for a in self.apps:
             rows.append({
                 "name": a["name"],
@@ -1223,12 +1230,131 @@ class PiTV:
         items = self.app_items()
         rows = []
         for x in items:
-            if x.get("refresh"):
+            if x.get("store"):
+                rows.append((x["name"], "Instalace jedním OK"))
+            elif x.get("refresh"):
                 rows.append((x["name"], "OK"))
             else:
                 rows.append((x["name"], "Na ploše" if x["visible"] else "Skryto"))
-        self.draw_rows("Aplikace", "Linux aplikace dostupné PiTV", rows, self.apps_selected,
-                       "OK = zobrazit/skrýt • skrytá aplikace zůstává nainstalovaná")
+        self.draw_rows("Aplikace", "Store + aplikace dostupné PiTV", rows, self.apps_selected,
+                       "OK = otevřít Store / zobrazit / skrýt")
+
+    STORE_STATE_LABELS = {
+        "installed": "Nainstalováno",
+        "available": "Instalovat",
+        "downloaded": "Staženo · dokončit instalaci",
+        "unsupported": "Nepodporováno",
+        "checking": "Kontroluji…",
+    }
+
+    def refresh_store_async(self):
+        if self.store_refreshing:
+            return
+        self.store_refreshing = True
+        self.store_catalog = load_store_catalog()
+        self.store_states = {x.get("id",""): "checking" for x in self.store_catalog}
+
+        def worker():
+            for item in self.store_catalog:
+                try:
+                    state = store_state(item)
+                except Exception:
+                    state = "unsupported"
+                self.store_states[item.get("id","")] = state
+            self.store_refreshing = False
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def draw_store(self):
+        items = self.store_catalog
+        if not items:
+            self.draw_rows("PiTV Store", "Katalog aplikací", [("Store", "Katalog je prázdný")], 0,
+                           "Katalog: /etc/pitv/store/catalog.json")
+            return
+
+        rows = []
+        for item in items:
+            state = self.store_states.get(item.get("id",""), "checking")
+            if self.store_busy_id == item.get("id"):
+                status = "Instaluji…"
+            else:
+                status = self.STORE_STATE_LABELS.get(state, state)
+            platform = "ANDROID" if item.get("platform") == "android" else "LINUX"
+            rows.append((item.get("name","Aplikace"), f"{platform} · {status}"))
+
+        visible = 8
+        start = max(0, min(self.store_selected-visible//2, max(0, len(rows)-visible)))
+        self.draw_rows("PiTV Store", "Ověřený katalog pro Raspberry Pi / TV",
+                       rows[start:start+visible], self.store_selected-start,
+                       "OK = stáhnout a nainstalovat • Android aplikace vyžadují Waydroid")
+
+    def install_store_item(self, item):
+        store_id = item.get("id","")
+        if not store_id or self.store_busy_id:
+            return
+
+        state = self.store_states.get(store_id)
+        if state == "installed":
+            self.show_toast(f"{item.get('name','Aplikace')} už je nainstalovaná")
+            return
+
+        installer = item.get("installer", {})
+        install_type = installer.get("type")
+        self.store_busy_id = store_id
+        self.show_toast(f"Instaluji {item.get('name','aplikaci')}…", 4)
+
+        def finish(message, ok=True):
+            self.store_busy_id = ""
+            self.apps = load_apps()
+            try:
+                self.store_states[store_id] = store_state(item)
+            except Exception:
+                self.store_states[store_id] = "installed" if ok else "available"
+            self.show_toast(message, 5)
+
+        def worker():
+            try:
+                if install_type == "apt":
+                    package = installer.get("package","")
+                    ok, msg = run_privileged("apt-install", {"package": package}, 1200)
+                    finish(msg, ok)
+                    return
+
+                if install_type == "github_release_apk":
+                    if not waydroid_available():
+                        finish("Waydroid není nainstalovaný — otevři Android / APK", False)
+                        return
+
+                    path, version = download_github_apk(item)
+                    meta = inspect_apk(path)
+                    package = meta.get("package","")
+                    app = {
+                        "name": meta.get("name") or item.get("name","APK"),
+                        "kind": "apk",
+                        "apk_path": str(path),
+                        "package": package,
+                        "activity": meta.get("activity",""),
+                        "version": meta.get("version","") or version,
+                        "sdk": meta.get("sdk",""),
+                        "tv": bool(meta.get("tv")),
+                    }
+
+                    run_privileged("waydroid-container-start", {}, 90)
+                    ok, msg = ensure_apk_installed(app)
+                    if ok:
+                        mark_android_installed(item, package, path, version)
+                        finish(f"{item.get('name','APK')} nainstalováno", True)
+                    else:
+                        # APK stays downloaded and appears in PiTV even when
+                        # this Waydroid session cannot finish installation yet.
+                        finish(msg or "APK staženo; instalaci dokončí Waydroid", False)
+                    return
+
+                finish("Tento typ instalace PiTV Store nepodporuje", False)
+            except Exception as e:
+                finish(f"Store: {e}", False)
+
+        threading.Thread(target=worker, daemon=True).start()
 
     def android_items(self):
         apks = [a for a in self.apps if a.get("kind") == "apk"]
@@ -1315,6 +1441,7 @@ class PiTV:
         elif self.page == "audio": self.draw_audio()
         elif self.page == "cec": self.draw_cec()
         elif self.page == "apps": self.draw_apps_settings()
+        elif self.page == "store": self.draw_store()
         elif self.page == "android": self.draw_android()
         elif self.page == "system": self.draw_system()
         elif self.page == "power": self.draw_power()
@@ -1485,6 +1612,9 @@ class PiTV:
         if key == pygame.K_ESCAPE:
             if self.page == "home":
                 return
+            if self.page == "store":
+                self.page = "apps"
+                return
             if self.page == "settings":
                 self.page = "home"; self.selected = max(0, len(self.home_items())-1)
             else:
@@ -1608,7 +1738,11 @@ class PiTV:
                 self.apps_selected = min(len(items)-1, self.apps_selected+1)
             elif key in (pygame.K_RETURN, pygame.K_KP_ENTER):
                 item = items[self.apps_selected]
-                if item.get("refresh"):
+                if item.get("store"):
+                    self.page = "store"
+                    self.store_selected = 0
+                    self.refresh_store_async()
+                elif item.get("refresh"):
                     self.apps = load_apps()
                     self.apps_selected = min(self.apps_selected, max(0, len(self.app_items())-1))
                     self.show_toast("Seznam aplikací obnoven")
@@ -1619,6 +1753,15 @@ class PiTV:
                     else: hidden.add(name)
                     self.cfg["hidden_apps"] = sorted(hidden)
                     save_user_config(self.cfg)
+
+        elif self.page == "store":
+            items = self.store_catalog
+            if key == pygame.K_UP:
+                self.store_selected = max(0, self.store_selected-1)
+            elif key == pygame.K_DOWN:
+                self.store_selected = min(max(0, len(items)-1), self.store_selected+1)
+            elif key in (pygame.K_RETURN, pygame.K_KP_ENTER) and items:
+                self.install_store_item(items[self.store_selected])
 
         elif self.page == "android":
             rows = self.android_items()

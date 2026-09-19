@@ -1247,6 +1247,21 @@ class PiTV:
             self.text(item["name"], rr.x+16, rr.bottom-int(rr.h*.37), rr.h*.16, self.t["text"], True)
             self.text(item.get("subtitle",""), rr.x+16, rr.bottom-int(rr.h*.18), rr.h*.105, self.t["muted"])
 
+    SETTINGS = [
+        ("Vzhled", "Motiv, dlaždice a hodiny"),
+        ("Spořič obrazovky", "Nečinnost, černá obrazovka a CEC standby"),
+        ("Síť", "Ethernet, Wi-Fi a IP adresy"),
+        ("Zvuk", "HDMI audio a hlasitost TV"),
+        ("HDMI / CEC", "TV ovladač a ovládání televize"),
+        ("Aplikace", "PiTV Store a aplikace na domovské obrazovce"),
+        ("Server Store", "Homebridge, Tailscale, Docker a ATVLoadly"),
+        ("Android / APK", "APK inspector a Waydroid backend"),
+        ("Aktualizace", "PiTV, Store aplikace a Ubuntu"),
+        ("Systém", "Stav Raspberry Pi"),
+        ("Napájení", "Restart nebo vypnutí"),
+        ("O PiTV", "Verze a informace"),
+    ]
+
     def draw_settings(self):
         self.draw_sidebar("settings")
         self.header("Nastavení", "Všechno důležité pro PiTV na jednom místě")

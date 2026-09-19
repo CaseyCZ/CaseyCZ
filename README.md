@@ -1,4 +1,4 @@
-# PiTV — standalone
+# PiTV 1.3 — standalone
 
 Tato větev obsahuje pouze PiTV. PiTV runtime, Store, Server Store a self-update nečtou žádný kód z ostatních projektů v repozitáři.
 
@@ -146,3 +146,16 @@ standby mode.
 Automated check: `.github/workflows/pitv-check.yml` validates Python, shell and Store JSON on PiTV branch pushes.
 
 Waydroid is initialized with the GAPPS image so the official Google Play entries for YouTube, Spotify and Plex can be opened from PiTV Store. Waydroid may require Google Play device certification on first use.
+
+
+## PiTV Apple themes
+
+PiTV now uses the same visual system across Home, Store, Server Store, Settings,
+Updates, Android/APK, HDMI/CEC and the remaining settings pages.
+
+Available themes:
+- **PiTV Apple Dark** — dark glass panels, blue focus glow, cinematic hero cards.
+- **PiTV Apple Light** — bright glass panels, clean white/gray background, blue focus states.
+
+Both themes keep the same remote navigation and functionality. The theme can be
+changed in **Nastavení → Vzhled**.

@@ -55,6 +55,11 @@ mv /opt/pitv/pitv.new /opt/pitv/pitv
 install -m 0644 config/config.json /etc/pitv/config.json
 install -m 0644 store/catalog.json /etc/pitv/store/catalog.json
 install -m 0644 store/server_catalog.json /etc/pitv/store/server_catalog.json
+
+# /etc/pitv/apps.d is PiTV-managed. User custom launchers belong in
+# ~/.config/pitv/apps.d and are preserved across updates.
+rm -rf /etc/pitv/apps.d
+install -d -m 0755 /etc/pitv/apps.d
 cp -a config/apps.d/. /etc/pitv/apps.d/
 install -m 0755 system/pitv-session /usr/local/bin/pitv-session
 install -m 0755 system/pitv-waydroid-launch /usr/local/bin/pitv-waydroid-launch

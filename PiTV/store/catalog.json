@@ -1,31 +1,38 @@
 {
-  "version": 1,
+  "version": 2,
   "apps": [
     {
       "id": "kodi",
       "name": "Kodi",
-      "description": "Open-source media center for TV.",
+      "description": "Mediální centrum pro filmy, seriály, hudbu a síťové zdroje.",
       "category": "Media",
       "platform": "linux",
       "icon": "KODI",
+      "featured": true,
+      "source_label": "Ubuntu",
       "installer": {"type": "apt", "package": "kodi"}
     },
     {
       "id": "vlc",
       "name": "VLC",
-      "description": "Video and network stream player.",
+      "description": "Přehrávač videa, audia a síťových streamů.",
       "category": "Media",
       "platform": "linux",
       "icon": "VLC",
+      "featured": true,
+      "source_label": "Ubuntu",
       "installer": {"type": "apt", "package": "vlc"}
     },
     {
       "id": "smarttube",
       "name": "SmartTube",
-      "description": "Android TV YouTube client. Official GitHub release.",
+      "description": "YouTube klient určený pro Android TV. PiTV vždy stáhne nejnovější stabilní ARM64 release.",
       "category": "Video",
       "platform": "android",
       "icon": "ST",
+      "featured": true,
+      "source_label": "Official GitHub",
+      "requires": "waydroid",
       "installer": {
         "type": "github_release_apk",
         "repo": "yuliskov/SmartTube",
@@ -35,10 +42,13 @@
     {
       "id": "jellyfin-tv",
       "name": "Jellyfin Android TV",
-      "description": "Official Jellyfin client for Android TV.",
+      "description": "Oficiální Jellyfin klient pro Android TV.",
       "category": "Media",
       "platform": "android",
       "icon": "JF",
+      "featured": true,
+      "source_label": "Official GitHub",
+      "requires": "waydroid",
       "installer": {
         "type": "github_release_apk",
         "repo": "jellyfin/jellyfin-androidtv",

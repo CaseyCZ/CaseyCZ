@@ -84,7 +84,7 @@ def store_state(item):
     kind = installer.get("type")
     if kind == "apt":
         return "installed" if apt_installed(installer.get("package", "")) else "available"
-    if kind == "github_release_apk":
+    if kind in ("github_release_apk", "direct_apk"):
         receipt = read_receipt(item.get("id", ""))
         package = receipt.get("package", "")
         if package and package in _waydroid_packages():
@@ -93,6 +93,9 @@ def store_state(item):
         if path and Path(path).is_file():
             return "downloaded"
         return "available"
+    if kind == "play_store":
+        package = installer.get("package", "")
+        return "installed" if package and package in _waydroid_packages() else "available"
     return "unsupported"
 
 
@@ -154,6 +157,45 @@ def download_github_apk(item, progress=None):
         source=repo,
     )
     return dest, release.get("tag_name", "")
+
+
+def download_direct_apk(item, progress=None):
+    installer = item.get("installer", {})
+    url = installer.get("url", "")
+    if not url.lower().startswith("https://"):
+        raise RuntimeError("PiTV Store povoluje pouze HTTPS APK zdroje")
+
+    version = str(installer.get("version", ""))
+    filename = installer.get("filename", "") or Path(url).name or "app.apk"
+    if not filename.lower().endswith(".apk"):
+        raise RuntimeError("Store zdroj není APK")
+
+    USER_APK_DIR.mkdir(parents=True, exist_ok=True)
+    safe_id = re.sub(r"[^A-Za-z0-9_.-]+", "-", item.get("id", "app"))
+    dest = USER_APK_DIR / f"store-{safe_id}-{filename}"
+    tmp = dest.with_suffix(dest.suffix + ".part")
+
+    req = urllib.request.Request(url, headers={"User-Agent": "PiTV-Store/1.1"})
+    with urllib.request.urlopen(req, timeout=60) as src, open(tmp, "wb") as out:
+        total = int(src.headers.get("Content-Length", "0") or 0)
+        done = 0
+        while True:
+            chunk = src.read(1024 * 256)
+            if not chunk:
+                break
+            out.write(chunk)
+            done += len(chunk)
+            if progress and total:
+                progress(done, total)
+
+    tmp.replace(dest)
+    write_receipt(
+        item.get("id", ""),
+        path=str(dest),
+        version=version,
+        source=url,
+    )
+    return dest, version
 
 
 def mark_android_installed(item, package, path, version=""):

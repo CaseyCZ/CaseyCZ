@@ -13,7 +13,8 @@ from pathlib import Path
 
 import pygame
 from apk_backend import (discover_apks, ensure_apk_installed, inspect_apk,
-                         waydroid_available, waydroid_status, tailscale_info)
+                         waydroid_available, waydroid_packages, waydroid_status,
+                         tailscale_info)
 from store_backend import (download_direct_apk, download_github_apk,
                            load_store_catalog, mark_android_installed,
                            store_state)
@@ -174,7 +175,34 @@ def load_apps():
             required = data.get("requires") or data["command"].split()[0]
             if available_command(required):
                 apps.append(data)
-    apps.extend(discover_apks())
+
+    apk_apps = discover_apks()
+    apps.extend(apk_apps)
+
+    # Apps installed directly from Google Play have no APK in PiTV's watched
+    # folders. Surface supported catalog packages as normal launcher tiles.
+    installed_packages = waydroid_packages() if waydroid_available() else set()
+    known_packages = {a.get("package", "") for a in apk_apps if a.get("package")}
+    if installed_packages:
+        for item in load_store_catalog():
+            installer = item.get("installer", {})
+            if installer.get("type") != "play_store":
+                continue
+            package = installer.get("package", "")
+            if not package or package not in installed_packages or package in known_packages:
+                continue
+            apps.append({
+                "name": item.get("name", package),
+                "subtitle": "Android TV · Google Play",
+                "icon": item.get("icon", "APK"),
+                "kind": "apk",
+                "apk_path": "",
+                "package": package,
+                "activity": "",
+                "version": "",
+                "sdk": "",
+                "tv": True,
+            })
     return apps
 
 

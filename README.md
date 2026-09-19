@@ -1,32 +1,39 @@
-# PiTV 1.3 — standalone
+# PiTV 1.3
 
-Tato větev obsahuje pouze PiTV. PiTV runtime, Store, Server Store a self-update nečtou žádný kód z ostatních projektů v repozitáři.
+<p align="center">
+  <strong>Lehký TV launcher pro Raspberry Pi 4 nad Ubuntu Serverem.</strong><br>
+  Raspberry zůstává 24/7 server, zatímco HDMI nabízí vlastní rozhraní PiTV ovládané televizním ovladačem.
+</p>
 
-PiTV is a lightweight TV shell for **Ubuntu Server ARM64 on Raspberry Pi 4**. The Raspberry Pi stays a 24/7 server while HDMI shows a remote-friendly launcher.
+<p align="center">
+  <a href="https://github.com/CaseyCZ/CaseyCZ/actions/workflows/pitv-check.yml?query=branch%3Apitv-standalone"><img src="https://github.com/CaseyCZ/CaseyCZ/actions/workflows/pitv-check.yml/badge.svg?branch=pitv-standalone" alt="PiTV Check"></a>
+  <a href="https://github.com/CaseyCZ/CaseyCZ/actions/workflows/pitv-online-smoke.yml"><img src="https://img.shields.io/badge/Online%20Smoke-passed-22c55e?style=flat-square" alt="Online smoke passed"></a>
+  <img src="https://img.shields.io/badge/Raspberry%20Pi-4-C51A4A?style=flat-square&logo=raspberrypi&logoColor=white" alt="Raspberry Pi 4">
+  <img src="https://img.shields.io/badge/Ubuntu%20Server-24.04-E95420?style=flat-square&logo=ubuntu&logoColor=white" alt="Ubuntu Server 24.04">
+  <img src="https://img.shields.io/badge/License-MIT-38BDF8?style=flat-square" alt="MIT">
+</p>
 
-## What is included
+> **Standalone větev:** `pitv-standalone` obsahuje kompletní PiTV včetně launcheru, Store, Server Store, instalátorů a self-update. PiTV za běhu nečte kód z ostatních projektů v repozitáři.
 
-- fullscreen PiTV launcher, CaseyCZ/iOS Hub visual style
-- lightweight **labwc Wayland compositor** (no GNOME/Ubuntu Desktop)
-- HDMI-CEC remote: arrows, OK, Back, Home, TV power, active source, volume, mute
-- 24/7 screensaver with moving clock, black screen and optional CEC TV standby
-- Ethernet status + Wi-Fi scan/connect/disconnect through NetworkManager
-- HDMI-only audio model for Raspberry Pi 4 (HDMI 1/2)
-- Linux apps (Kodi etc.) from `/etc/pitv/apps.d/*.json`
-- APK Inspector using `aapt` / `apktool`
-- APK discovery from `/var/lib/pitv/apks/` and `~/PiTV/APKs/`
-- Waydroid backend: install APK, launch Android app, full Android UI
-- application visibility settings
-- PiTV Store: Kodi, SmartTube, Stremio, YouTube, Spotify and Plex
-- Server Store: Homebridge, Tailscale, Docker Engine and ATVLoadly
-- system health, temperature, RAM, disk, uptime and APT updates
-- restart/power-off confirmations
-- Tailscale status shown in About; Tailscale itself stays a background service
-- SSH remains available as an optional recovery/admin path; normal PiTV setup and updates are in the TV UI
+## Co PiTV umí
 
-## Install
+- fullscreen TV launcher bez GNOME/Ubuntu Desktopu,
+- dvě sjednocená témata **PiTV Apple Dark** a **PiTV Apple Light**,
+- HDMI-CEC: šipky, OK, Back, Home, power, active source, hlasitost a mute,
+- vlastní spořič: hodiny → černá obrazovka → volitelný CEC standby,
+- Wi-Fi scan/připojení/odpojení přes NetworkManager bez přepisování serverové sítě,
+- HDMI audio pro Raspberry Pi 4,
+- Linux aplikace včetně Kodi,
+- Android/APK backend přes Waydroid + GAPPS/Google Play,
+- **PiTV Store** pro TV aplikace,
+- **Server Store** pro služby běžící 24/7 na pozadí,
+- aktualizace PiTV, katalogů, Linux aplikací a Ubuntu přímo z TV,
+- systémové informace: teplota, RAM, disk, uptime, kernel, síť a Tailscale,
+- čistý uninstall, který ponechá uživatelská nastavení a APK data.
 
-Ubuntu Server 24.04 ARM64 is the primary target.
+## Instalace
+
+Primární cíl je **Ubuntu Server 24.04 ARM64 na Raspberry Pi 4**.
 
 ```bash
 git clone --branch pitv-standalone --single-branch https://github.com/CaseyCZ/CaseyCZ.git PiTV
@@ -35,136 +42,211 @@ sudo ./install.sh
 sudo reboot
 ```
 
-After boot: `tty1 -> autologin pitv -> dbus -> labwc -> PiTV`. SSH is unchanged.
+Po restartu:
 
-## Kodi
-
-```bash
-sudo apt install kodi
+```text
+Ubuntu Server
+└── tty1 autologin: pitv
+    └── dbus-run-session
+        └── labwc / Wayland
+            └── PiTV
 ```
 
-`config/apps.d/kodi.json` is already included; PiTV shows the tile when Kodi is installed.
+SSH a serverové služby zůstávají dostupné. PiTV nevypíná Raspberry při běžném uspání TV.
 
-## APK
+## Ovládání
 
-Copy APK files over SSH/SFTP/Tailscale:
+TV ovladač přes HDMI-CEC:
 
-```bash
-sudo cp SmartTube.apk /var/lib/pitv/apks/
-sudo chown pitv:pitv /var/lib/pitv/apks/SmartTube.apk
-```
+| Tlačítko | PiTV |
+|---|---|
+| Šipky | navigace |
+| OK / Enter | potvrzení |
+| Back | zpět |
+| Home / Menu | návrat do PiTV |
+| Volume ± | TV / receiver přes CEC |
+| Mute | TV / receiver přes CEC |
 
-PiTV reads package name, label, launchable activity, SDK and Leanback/TV hints with `aapt`, then creates the launcher tile automatically.
+PiTV používá jeden persistentní CEC klient pro příjem tlačítek i odesílání CEC příkazů.
 
-### Waydroid
+## PiTV Store
 
-Waydroid is optional because PiTV also works as a pure Linux TV shell. The normal
-installation path is now directly on the TV:
+**Nastavení → Aplikace → PiTV Store**
+
+| Aplikace | Instalace |
+|---|---|
+| Kodi | Ubuntu APT |
+| SmartTube | oficiální GitHub ARM64 release |
+| Stremio | oficiální Android TV ARM64 APK |
+| YouTube | Google Play ve Waydroidu |
+| Spotify | Google Play ve Waydroidu |
+| Plex | Google Play ve Waydroidu |
+
+U přímých APK PiTV kontroluje package ID před instalací.
+
+## Android / APK
+
+Waydroid je volitelný. PiTV funguje i bez něj jako čistý Linux TV launcher.
+
+Normální instalace bez SSH:
 
 **Nastavení → Android / APK → Waydroid + Google Play → Instalovat**
 
-PiTV installs the official Waydroid repository and initializes the **GAPPS**
-image. The command-line script remains available only as a recovery/admin path:
+PiTV nainstaluje Waydroid z oficiálního repozitáře a inicializuje GAPPS image. Ruční recovery cesta zůstává:
 
 ```bash
 sudo ./scripts/install-waydroid.sh
 ```
 
-Selecting an APK tile installs it with `waydroid app install` when needed and
-launches the package. HOME on the CEC remote stops the foreground Android session
-and returns to PiTV.
-
-> Raspberry Pi / Waydroid hardware compatibility still has to be verified on the exact Pi 4 image/kernel. PiTV detects a missing backend instead of failing the launcher.
-
-## Settings
-
-- Appearance
-- Screensaver
-- Network / Wi-Fi
-- HDMI audio
-- HDMI / CEC
-- Applications / PiTV Store
-- Server Store
-- Android / APK
-- Updates
-- System
-- Power
-- About / Tailscale status
-
-## TV remote behavior
-
-PiTV owns HDMI-CEC. While Kodi or Android is in front, CEC navigation is relayed through `wtype`. HOME always returns to PiTV. Volume and mute are sent to the TV/receiver through CEC.
-
-## Project layout
+Vlastní APK lze vložit do:
 
 ```text
-pitv/pitv.py             launcher + settings UI
-pitv/apk_backend.py      APK inspector / Waydroid adapter
-system/pitv-helper       restricted privileged actions
-system/pitv-session      Wayland session bootstrap
-system/labwc/            compositor config/autostart
-system/pitv-waydroid-launch Android foreground wrapper
-config/apps.d/            Linux app definitions
-scripts/install-waydroid.sh optional Android runtime setup
+/var/lib/pitv/apks/
+~/PiTV/APKs/
 ```
 
-## License
-
-MIT.
-
-
-## PiTV Store
-
-The TV app catalog is managed from **Settings → Applications → PiTV Store**.
-
-Initial catalog:
-- Kodi
-- SmartTube
-- Stremio
-- YouTube
-- Spotify
-- Plex
-
-Kodi installs from Ubuntu. SmartTube uses the official ARM64 GitHub release.
-Stremio uses the official Android TV ARM64 APK. YouTube, Spotify and Plex open
-their official Google Play pages inside a Waydroid image with Google Play.
+PiTV přes `aapt` zjišťuje package, název, launchable activity, SDK a TV/Leanback informace.
 
 ## Server Store
 
-**Settings → Server Store** installs background services without SSH:
+**Nastavení → Server Store**
 
-- Homebridge — official Homebridge apt repository, web UI on port 8581
-- Tailscale — official Linux installer; login can be started from PiTV
-- Docker Engine — official Docker Ubuntu repository
-- ATVLoadly — Docker container with Avahi, web UI on port 5533
+| Služba | Zdroj | Výsledek |
+|---|---|---|
+| Homebridge | oficiální Homebridge repository | služba + web :8581 |
+| Tailscale | oficiální Linux installer | tailscaled + login |
+| Docker Engine | oficiální Docker repository | Docker service |
+| ATVLoadly | `bitxeno/atvloadly` | Docker container + web :5533 |
 
-These services keep running when the TV is off and PiTV is in screensaver/CEC
-standby mode.
+Tyto služby běží dál i při vypnuté/uspáné TV.
 
-## In-app updates
+## Aktualizace
 
-**Settings → Updates** manages:
-- PiTV self-update from the GitHub branch
-- PiTV Store + Server Store catalogs
-- installed Linux Store applications
-- Ubuntu package updates
-- PiTV UI restart
+**Nastavení → Aktualizace**
 
-Automated checks: `.github/workflows/pitv-check.yml` validates Python, shell,
-Store JSON, both themes and every UI screen. `.github/workflows/pitv-online-smoke.yml`
-performs the heavier install/start/Store tests on Ubuntu x64 and ARM64.
+PiTV umí přímo z TV:
 
-Waydroid is initialized with the GAPPS image so the official Google Play entries for YouTube, Spotify and Plex can be opened from PiTV Store. Waydroid may require Google Play device certification on first use.
+- zkontrolovat dostupnou verzi PiTV,
+- provést self-update z větve `pitv-standalone`,
+- aktualizovat PiTV Store + Server Store katalog,
+- aktualizovat Linux Store aplikace,
+- aktualizovat Ubuntu balíčky,
+- restartovat pouze PiTV UI.
 
+Uživatelské nastavení v `/home/pitv/.config/pitv` se při self-update zachovává.
 
-## PiTV Apple themes
+## Nastavení
 
-PiTV now uses the same visual system across Home, Store, Server Store, Settings,
-Updates, Android/APK, HDMI/CEC and the remaining settings pages.
+- Vzhled
+- Spořič obrazovky
+- Síť / Wi-Fi
+- Zvuk / HDMI
+- HDMI / CEC
+- Aplikace / PiTV Store
+- Server Store
+- Android / APK
+- Aktualizace
+- Systém
+- Napájení
+- O PiTV
 
-Available themes:
-- **PiTV Apple Dark** — dark glass panels, blue focus glow, cinematic hero cards.
-- **PiTV Apple Light** — bright glass panels, clean white/gray background, blue focus states.
+## Témata
 
-Both themes keep the same remote navigation and functionality. The theme can be
-changed in **Nastavení → Vzhled**.
+### PiTV Apple Dark
+Tmavé glass panely, modrý focus, hero karty a TV-first rozložení.
+
+### PiTV Apple Light
+Světlé panely, čisté pozadí a stejná navigace i funkce jako Dark.
+
+Přepnutí: **Nastavení → Vzhled**.
+
+## Online testy
+
+Repo obsahuje dvě úrovně CI:
+
+### PiTV Check
+`.github/workflows/pitv-check.yml`
+
+Automaticky při změnách kontroluje:
+
+- Python syntax,
+- shell syntax,
+- JSON katalogy,
+- všech 15 obrazovek,
+- oba motivy Dark/Light,
+- základní runtime render přes dummy SDL.
+
+### PiTV Online Smoke
+`.github/workflows/pitv-online-smoke.yml`
+
+Ruční těžší test. Poslední kompletní audit prošel na **Ubuntu 24.04 x64 i ARM64** a ověřil:
+
+- čistou instalaci `sudo ./install.sh`,
+- instalované soubory a sudoers,
+- start PiTV event loopu,
+- render všech obrazovek,
+- navigaci Home/sidebar,
+- instalaci Kodi ze Store,
+- online update obou katalogů,
+- PiTV self-update a následný restart,
+- čistý uninstall,
+- Homebridge / Tailscale / Docker / ATVLoadly na ARM64,
+- stažení a `aapt` kontrolu SmartTube + Stremio ARM64 APK.
+
+Podrobnosti jsou v [AUDIT.md](AUDIT.md).
+
+## Co ještě vyžaduje fyzický Raspberry Pi 4
+
+Cloud CI nenahradí skutečný HDMI hardware. Na fyzickém Pi je ještě potřeba ověřit:
+
+- KMS/Wayland obraz přes konkrétní HDMI port a TV,
+- skutečný TV ovladač přes HDMI-CEC,
+- CEC power/standby/volume podle výrobce TV/receiveru,
+- HDMI audio `vc4hdmi0/vc4hdmi1`,
+- Kodi fullscreen + hardwarovou akceleraci videa,
+- Waydroid binder/kernel/GPU kompatibilitu konkrétního Ubuntu image,
+- Android TV aplikace v reálném Waydroid okně.
+
+## Struktura projektu
+
+```text
+pitv/
+  pitv.py                 hlavní UI, navigace, nastavení
+  apk_backend.py          APK/Waydroid detekce
+  store_backend.py        PiTV Store backend
+  update_backend.py       kontrola verze
+store/
+  catalog.json            TV aplikace
+  server_catalog.json     serverové služby
+system/
+  pitv-helper             omezené privilegované akce
+  pitv-session            TV Wayland session
+  pitv-waydroid-launch    Android foreground wrapper
+  pitv-self-update        self-update
+  labwc/                  compositor config
+config/
+  config.json
+  apps.d/
+scripts/
+  install-waydroid.sh
+install.sh
+uninstall.sh
+```
+
+## Bezpečnost
+
+Privilegované akce nejdou přes obecný root shell. Uživatel `pitv` může přes sudo spouštět pouze PiTV helper, který používá allowlist akcí/balíčků/package ID.
+
+Self-update stahuje aktuální větev `pitv-standalone` z tohoto GitHub repozitáře a spouští její `install.sh` jako root. Pro produkční distribuci je vhodné později přejít na podepsané/verzované releasy.
+
+## Odinstalace
+
+```bash
+sudo ./uninstall.sh
+```
+
+Odstraní PiTV runtime, kiosk/autologin konfiguraci a PiTV helpery. Uživatel `pitv`, jeho nastavení a APK data zůstanou zachované pro případnou reinstalaci.
+
+## Licence
+
+MIT © 2026 CaseyCZ

@@ -1111,7 +1111,9 @@ class PiTV:
             return
 
         if self.screensaver_preview:
-            self.screensaver_stage = "clock"
+            self.screensaver_stage = (
+                "black" if self.cfg.get("screensaver_mode", "clock") == "black" else "clock"
+            )
             return
 
         if not self.cfg.get("screensaver_enabled", True):

@@ -142,3 +142,5 @@ standby mode.
 - PiTV UI restart
 
 Automated check: `.github/workflows/pitv-check.yml` validates Python, shell and Store JSON on PiTV branch pushes.
+
+Waydroid is initialized with the GAPPS image so the official Google Play entries for YouTube, Spotify and Plex can be opened from PiTV Store. Waydroid may require Google Play device certification on first use.

@@ -14,8 +14,9 @@ from pathlib import Path
 import pygame
 from apk_backend import (discover_apks, ensure_apk_installed, inspect_apk,
                          waydroid_available, waydroid_status, tailscale_info)
-from store_backend import (download_github_apk, load_store_catalog,
-                           mark_android_installed, store_state)
+from store_backend import (download_direct_apk, download_github_apk,
+                           load_store_catalog, mark_android_installed,
+                           store_state)
 from update_backend import is_newer, remote_pitv_version
 
 APP_NAME = "PiTV"
@@ -1326,12 +1327,16 @@ class PiTV:
                     finish(msg, ok)
                     return
 
-                if install_type == "github_release_apk":
+                if install_type in ("github_release_apk", "direct_apk"):
                     if not waydroid_available():
                         finish("Waydroid není nainstalovaný — otevři Android / APK", False)
                         return
 
-                    path, version = download_github_apk(item)
+                    if install_type == "github_release_apk":
+                        path, version = download_github_apk(item)
+                    else:
+                        path, version = download_direct_apk(item)
+
                     meta = inspect_apk(path)
                     package = meta.get("package","")
                     app = {
@@ -1351,9 +1356,28 @@ class PiTV:
                         mark_android_installed(item, package, path, version)
                         finish(f"{item.get('name','APK')} nainstalováno", True)
                     else:
-                        # APK stays downloaded and appears in PiTV even when
-                        # this Waydroid session cannot finish installation yet.
                         finish(msg or "APK staženo; instalaci dokončí Waydroid", False)
+                    return
+
+                if install_type == "play_store":
+                    if not waydroid_available():
+                        finish("Waydroid není nainstalovaný — otevři Android / APK", False)
+                        return
+                    package = installer.get("package","")
+                    if not package:
+                        finish("Store položka nemá package ID", False)
+                        return
+                    try:
+                        self.external_proc = subprocess.Popen(
+                            ["/usr/local/bin/pitv-waydroid-launch", "--play-store", package],
+                            env=os.environ.copy(), start_new_session=True,
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                        )
+                        self.external_kind = "apk"
+                        self.store_busy_id = ""
+                        self.show_toast(f"Otevírám {item.get('name','aplikaci')} v Google Play", 5)
+                    except Exception as e:
+                        finish(f"Google Play: {e}", False)
                     return
 
                 finish("Tento typ instalace PiTV Store nepodporuje", False)

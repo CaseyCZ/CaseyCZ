@@ -1779,19 +1779,36 @@ class PiTV:
 
     def android_items(self):
         apks = [a for a in self.apps if a.get("kind") == "apk"]
-        runtime = "Dostupný" if waydroid_available() else "Nenainstalován"
+        runtime = "Nainstalován" if waydroid_available() else "OK · Nainstalovat + Google Play"
         items = [
-            ("Waydroid runtime", runtime),
+            ("Waydroid + Google Play", runtime),
             ("Waydroid session", waydroid_status()),
             ("APK složka", "/var/lib/pitv/apks"),
             ("Nalezená APK", str(len(apks))),
             ("Obnovit APK", "OK"),
-            ("Otevřít plné Android UI", "OK" if waydroid_available() else "Waydroid chybí"),
+            ("Otevřít plné Android UI", "OK" if waydroid_available() else "Nejdřív nainstalovat Waydroid"),
         ]
         for a in apks[:4]:
             meta = a.get("package") or "bez package"
             items.append((a.get("name","APK"), meta))
         return items
+
+    def install_waydroid_async(self):
+        if waydroid_available():
+            self.show_toast("Waydroid už je nainstalovaný")
+            return
+        if self.updates_busy:
+            return
+
+        self.updates_busy = True
+        self.show_toast("Instaluji Waydroid + Google Play…", 6)
+
+        def worker():
+            ok, msg = run_privileged("waydroid-install", {}, 1800)
+            self.updates_busy = False
+            self.show_toast(msg, 7)
+
+        threading.Thread(target=worker, daemon=True).start()
 
     def draw_android(self):
         rows = self.android_items()
@@ -2430,7 +2447,13 @@ class PiTV:
             elif key == pygame.K_DOWN:
                 self.android_selected = min(len(rows)-1, self.android_selected+1)
             elif key in (pygame.K_RETURN, pygame.K_KP_ENTER):
-                if self.android_selected == 4:
+                if self.android_selected == 0 and not waydroid_available():
+                    self.open_confirm(
+                        "Waydroid + Google Play",
+                        "Nainstalovat Android runtime pro PiTV Store?",
+                        self.install_waydroid_async,
+                    )
+                elif self.android_selected == 4:
                     self.apps = load_apps()
                     self.show_toast("APK seznam obnoven")
                 elif self.android_selected == 5 and waydroid_available():

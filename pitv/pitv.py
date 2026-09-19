@@ -93,6 +93,10 @@ THEMES = {
     },
 }
 
+PITV_KEY_VOLUMEUP = 0x70000001
+PITV_KEY_VOLUMEDOWN = 0x70000002
+PITV_KEY_MUTE = 0x70000003
+
 CEC_MAP = {
     "up": pygame.K_UP,
     "down": pygame.K_DOWN,
@@ -107,9 +111,9 @@ CEC_MAP = {
     "play": pygame.K_SPACE,
     "pause": pygame.K_SPACE,
     "play / pause": pygame.K_SPACE,
-    "volume up": pygame.K_VOLUMEUP,
-    "volume down": pygame.K_VOLUMEDOWN,
-    "mute": pygame.K_MUTE,
+    "volume up": PITV_KEY_VOLUMEUP,
+    "volume down": PITV_KEY_VOLUMEDOWN,
+    "mute": PITV_KEY_MUTE,
 }
 
 
@@ -2166,11 +2170,11 @@ class PiTV:
             if key == pygame.K_HOME:
                 self.stop_external()
                 return
-            if key in (pygame.K_VOLUMEUP, pygame.K_KP_PLUS):
+            if key in (PITV_KEY_VOLUMEUP, pygame.K_KP_PLUS):
                 self.run_cec_action(cec_volume_up); return
-            if key in (pygame.K_VOLUMEDOWN, pygame.K_KP_MINUS):
+            if key in (PITV_KEY_VOLUMEDOWN, pygame.K_KP_MINUS):
                 self.run_cec_action(cec_volume_down); return
-            if key == pygame.K_MUTE:
+            if key == PITV_KEY_MUTE:
                 self.run_cec_action(cec_mute); return
             self.relay_to_external(key)
             return
@@ -2208,11 +2212,11 @@ class PiTV:
             return
 
         # Hardware volume buttons: HDMI TV/receiver via CEC.
-        if key in (pygame.K_VOLUMEUP, pygame.K_KP_PLUS):
+        if key in (PITV_KEY_VOLUMEUP, pygame.K_KP_PLUS):
             self.run_cec_action(cec_volume_up); return
-        if key in (pygame.K_VOLUMEDOWN, pygame.K_KP_MINUS):
+        if key in (PITV_KEY_VOLUMEDOWN, pygame.K_KP_MINUS):
             self.run_cec_action(cec_volume_down); return
-        if key == pygame.K_MUTE:
+        if key == PITV_KEY_MUTE:
             self.run_cec_action(cec_mute); return
 
         if self.page == "home":

@@ -22,6 +22,14 @@ done
 
 if [ "$TARGET" = "--full-ui" ]; then
   waydroid show-full-ui
+elif [ "$TARGET" = "--play-store" ]; then
+  PACKAGE="$APK"
+  [ -n "$PACKAGE" ] || exit 6
+  if ! waydroid app list 2>/dev/null | grep -Fq "com.android.vending"; then
+    exit 7
+  fi
+  waydroid shell am start -a android.intent.action.VIEW -d "market://details?id=$PACKAGE" >/dev/null 2>&1 || \
+    waydroid app launch com.android.vending || exit 8
 else
   if [ -n "$APK" ] && [ -f "$APK" ]; then
     if ! waydroid app list 2>/dev/null | grep -Fq "$TARGET"; then

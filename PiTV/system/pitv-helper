@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import json, os, shutil, subprocess, sys
 
+ALLOWED_STORE_APT = {"kodi", "vlc"}
+
 def out(msg, code=0):
     print(msg)
     raise SystemExit(code)
@@ -56,6 +58,16 @@ elif action == "waydroid-container-stop":
         out("Waydroid není nainstalovaný", 2)
     run(["waydroid", "container", "stop"], timeout=60)
     out("Waydroid container zastaven")
+
+elif action == "apt-install":
+    package = str(payload.get("package", "")).strip()
+    if package not in ALLOWED_STORE_APT:
+        out("Balíček není povolený v PiTV Store", 2)
+    env = os.environ.copy()
+    env["DEBIAN_FRONTEND"] = "noninteractive"
+    run(["apt-get", "update"], timeout=300, env=env)
+    run(["apt-get", "-y", "install", package], timeout=1200, env=env)
+    out(f"{package} nainstalováno")
 
 elif action == "apt-update":
     env = os.environ.copy()

@@ -32,7 +32,7 @@ def apt_installed(package):
         return False
     try:
         p = subprocess.run(
-            ["dpkg-query", "-W", "-f=\${Status}", package],
+            ["dpkg-query", "-W", "-f=${Status}", package],
             stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
             text=True, timeout=5, check=False,
         )

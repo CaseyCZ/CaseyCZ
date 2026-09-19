@@ -1,0 +1,38 @@
+name: PiTV Check
+
+on:
+  push:
+    branches: [pitv-v1]
+    paths:
+      - "PiTV/**"
+      - ".github/workflows/pitv-check.yml"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python syntax
+        run: |
+          python3 -m py_compile             PiTV/pitv/pitv.py             PiTV/pitv/apk_backend.py             PiTV/pitv/store_backend.py             PiTV/pitv/update_backend.py             PiTV/system/pitv-helper             PiTV/system/pitv-self-update
+      - name: Shell syntax
+        run: |
+          bash -n PiTV/install.sh
+          bash -n PiTV/uninstall.sh
+          bash -n PiTV/system/pitv-session
+          bash -n PiTV/system/pitv-waydroid-launch
+          bash -n PiTV/scripts/install-waydroid.sh
+      - name: Store JSON
+        run: |
+          python3 - <<'PY'
+          import json
+          for path in (
+              "PiTV/store/catalog.json",
+              "PiTV/store/server_catalog.json",
+              "PiTV/config/config.json",
+          ):
+              with open(path, encoding="utf-8") as f:
+                  json.load(f)
+              print("OK", path)
+          PY

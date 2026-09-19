@@ -27,6 +27,7 @@ USER_CONFIG = Path.home() / ".config/pitv/config.json"
 SYSTEM_APPS = Path("/etc/pitv/apps.d")
 USER_APPS = Path.home() / ".config/pitv/apps.d"
 SYSTEM_SERVER_CATALOG = Path("/etc/pitv/store/server_catalog.json")
+BUNDLED_SERVER_CATALOG = Path(__file__).resolve().parent.parent / "store" / "server_catalog.json"
 LAUNCH_FILE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "pitv-launch.json"
 
 DEFAULT_CONFIG = {
@@ -132,8 +133,12 @@ def save_user_config(cfg):
 
 
 def load_server_catalog():
-    data = safe_json(SYSTEM_SERVER_CATALOG, {})
-    return list(data.get("services", [])) if isinstance(data, dict) else []
+    for path in (SYSTEM_SERVER_CATALOG, BUNDLED_SERVER_CATALOG):
+        if path.exists():
+            data = safe_json(path, {})
+            if isinstance(data, dict):
+                return list(data.get("services", []))
+    return []
 
 
 def cmd_output(args, timeout=2):
@@ -506,9 +511,9 @@ class CECReader(threading.Thread):
         if shutil.which("cec-client") is None:
             return
         try:
-            # -d 8 = only critical messages; key lines still appear on common libCEC builds.
+            # libCEC emits "key pressed:" at DEBUG level (16).
             self.proc = subprocess.Popen(
-                ["cec-client", "-d", "8", "-t", "p", "-o", "PiTV"],
+                ["cec-client", "-d", "16", "-t", "p", "-o", "PiTV"],
                 stdin=subprocess.DEVNULL,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
@@ -547,6 +552,10 @@ class PiTV:
         self.page = "home"
         self.selected = 0
         self.settings_selected = 0
+        self.sidebar_focus = False
+        self.sidebar_selected = 0
+        self.store_return_page = "apps"
+        self.server_store_return_page = "settings"
         self.sub_selected = 0
         self.cec_selected = 0
         self.network_selected = 0
@@ -725,7 +734,9 @@ class PiTV:
         row_h = int(self.h*.058)
         for i, (key, icon, label) in enumerate(items):
             rr = pygame.Rect(rect.x+int(w*.055), y0+i*row_h, int(w*.89), int(row_h*.82))
-            selected = key == active
+            selected = (self.sidebar_focus and i == self.sidebar_selected) or (
+                not self.sidebar_focus and key == active
+            )
             if selected:
                 surf = pygame.Surface((rr.w, rr.h), pygame.SRCALPHA)
                 pygame.draw.rect(surf, (*self.t["accent_soft"], 235), surf.get_rect(), border_radius=14)
@@ -756,6 +767,43 @@ class PiTV:
             surf = self.font(ar.h*.27, True).render(action, True, (255,255,255))
             self.screen.blit(surf, surf.get_rect(center=ar.center))
         return r
+
+    SIDEBAR_PAGES = ["home", "store", "server_store", "android", "updates", "settings"]
+
+    def focus_sidebar(self, active_page=None):
+        page = active_page or self.page
+        try:
+            self.sidebar_selected = self.SIDEBAR_PAGES.index(page)
+        except ValueError:
+            self.sidebar_selected = self.SIDEBAR_PAGES.index("settings")
+        self.sidebar_focus = True
+
+    def activate_sidebar(self):
+        target = self.SIDEBAR_PAGES[self.sidebar_selected]
+        self.sidebar_focus = False
+        if target == "home":
+            self.page = "home"
+            self.selected = 0
+        elif target == "store":
+            self.page = "store"
+            self.store_return_page = "home"
+            self.store_selected = 0
+            self.refresh_store_async()
+        elif target == "server_store":
+            self.page = "server_store"
+            self.server_store_return_page = "home"
+            self.server_store_selected = 0
+            self.refresh_server_store_async()
+        elif target == "android":
+            self.page = "android"
+            self.android_selected = 0
+        elif target == "updates":
+            self.page = "updates"
+            self.updates_selected = 0
+            self.check_updates_async()
+        else:
+            self.page = "settings"
+            self.settings_selected = 0
 
     def header(self, title, subtitle=None):
         left = self.main_left()+int(self.w*.018)
@@ -1052,7 +1100,10 @@ class PiTV:
 
     def wake_from_screensaver(self):
         was_asleep = self.screensaver_stage != "off" or self.screensaver_preview
+        was_cec_standby = self.cec_standby_sent
         self.mark_activity()
+        if was_cec_standby and self.cfg.get("cec_enabled", True) and cec_available():
+            self.run_cec_action(cec_tv_on)
         return was_asleep
 
     def draw_screensaver(self):
@@ -1705,7 +1756,7 @@ class PiTV:
         linux_value = ", ".join(installed_linux) if installed_linux else "žádné"
         return [
             ("PiTV", pitv_value),
-            ("Store katalog", "GitHub · CaseyCZ"),
+            ("Store + Server katalog", "GitHub · PiTV"),
             ("Linux Store aplikace", linux_value),
             ("Ubuntu", ubuntu_value),
             ("Zkontrolovat vše", "OK"),
@@ -2029,6 +2080,7 @@ class PiTV:
         elif self.page == "apps":
             self.apps_selected = 0
         elif self.page == "server_store":
+            self.server_store_return_page = "settings"
             self.server_store_selected = 0
             self.refresh_server_store_async()
         elif self.page == "android":
@@ -2041,11 +2093,18 @@ class PiTV:
 
     def handle_home(self, key):
         items = self.home_items()
-        cols = 4 if self.w >= 1500 else 3
-        if key == pygame.K_LEFT: self.selected = max(0, self.selected-1)
-        elif key == pygame.K_RIGHT: self.selected = min(len(items)-1, self.selected+1)
-        elif key == pygame.K_UP: self.selected = max(0, self.selected-cols)
-        elif key == pygame.K_DOWN: self.selected = min(len(items)-1, self.selected+cols)
+        cols = 5 if self.w >= 1500 else 4
+        if key == pygame.K_LEFT:
+            if self.selected % cols == 0:
+                self.focus_sidebar("home")
+            else:
+                self.selected = max(0, self.selected-1)
+        elif key == pygame.K_RIGHT:
+            self.selected = min(len(items)-1, self.selected+1)
+        elif key == pygame.K_UP:
+            self.selected = max(0, self.selected-cols)
+        elif key == pygame.K_DOWN:
+            self.selected = min(len(items)-1, self.selected+cols)
         elif key in (pygame.K_RETURN, pygame.K_KP_ENTER):
             item = items[self.selected]
             if item["kind"] == "settings":
@@ -2086,17 +2145,31 @@ class PiTV:
             self.relay_to_external(key)
             return
 
+        if self.sidebar_focus:
+            if key == pygame.K_UP:
+                self.sidebar_selected = max(0, self.sidebar_selected-1)
+            elif key == pygame.K_DOWN:
+                self.sidebar_selected = min(len(self.SIDEBAR_PAGES)-1, self.sidebar_selected+1)
+            elif key == pygame.K_RIGHT:
+                self.sidebar_focus = False
+            elif key in (pygame.K_RETURN, pygame.K_KP_ENTER):
+                self.activate_sidebar()
+            elif key == pygame.K_ESCAPE:
+                self.sidebar_focus = False
+            return
+
         if key == pygame.K_HOME:
+            self.sidebar_focus = False
             self.page = "home"; self.selected = 0; return
 
         if key == pygame.K_ESCAPE:
             if self.page == "home":
                 return
             if self.page == "store":
-                self.page = "apps"
+                self.page = self.store_return_page
                 return
             if self.page == "server_store":
-                self.page = "settings"
+                self.page = self.server_store_return_page
                 return
             if self.page == "settings":
                 self.page = "home"; self.selected = max(0, len(self.home_items())-1)
@@ -2116,7 +2189,9 @@ class PiTV:
             self.handle_home(key)
 
         elif self.page == "settings":
-            if key == pygame.K_UP:
+            if key == pygame.K_LEFT:
+                self.focus_sidebar("settings")
+            elif key == pygame.K_UP:
                 self.settings_selected = max(0, self.settings_selected-1)
             elif key == pygame.K_DOWN:
                 self.settings_selected = min(len(self.SETTINGS)-1, self.settings_selected+1)
@@ -2225,6 +2300,7 @@ class PiTV:
                 item = items[self.apps_selected]
                 if item.get("store"):
                     self.page = "store"
+                    self.store_return_page = "apps"
                     self.store_selected = 0
                     self.refresh_store_async()
                 elif item.get("refresh"):
@@ -2241,26 +2317,45 @@ class PiTV:
 
         elif self.page == "store":
             items = self.store_catalog
-            if key == pygame.K_UP:
-                self.store_selected = max(0, self.store_selected-1)
-            elif key == pygame.K_DOWN:
+            cols = 3
+            if key == pygame.K_LEFT:
+                if self.store_selected % cols == 0:
+                    self.focus_sidebar("store")
+                else:
+                    self.store_selected = max(0, self.store_selected-1)
+            elif key == pygame.K_RIGHT:
                 self.store_selected = min(max(0, len(items)-1), self.store_selected+1)
+            elif key == pygame.K_UP:
+                self.store_selected = max(0, self.store_selected-cols)
+            elif key == pygame.K_DOWN:
+                self.store_selected = min(max(0, len(items)-1), self.store_selected+cols)
             elif key in (pygame.K_RETURN, pygame.K_KP_ENTER) and items:
                 self.install_store_item(items[self.store_selected])
 
         elif self.page == "server_store":
             items = self.server_store_catalog
-            if key == pygame.K_UP:
-                self.server_store_selected = max(0, self.server_store_selected-1)
-            elif key == pygame.K_DOWN:
+            cols = 2
+            if key == pygame.K_LEFT:
+                if self.server_store_selected % cols == 0:
+                    self.focus_sidebar("server_store")
+                else:
+                    self.server_store_selected = max(0, self.server_store_selected-1)
+            elif key == pygame.K_RIGHT:
                 self.server_store_selected = min(max(0, len(items)-1),
                                                  self.server_store_selected+1)
+            elif key == pygame.K_UP:
+                self.server_store_selected = max(0, self.server_store_selected-cols)
+            elif key == pygame.K_DOWN:
+                self.server_store_selected = min(max(0, len(items)-1),
+                                                 self.server_store_selected+cols)
             elif key in (pygame.K_RETURN, pygame.K_KP_ENTER) and items:
                 self.install_server_store_item(items[self.server_store_selected])
 
         elif self.page == "android":
             rows = self.android_items()
-            if key == pygame.K_UP:
+            if key == pygame.K_LEFT:
+                self.focus_sidebar("android")
+            elif key == pygame.K_UP:
                 self.android_selected = max(0, self.android_selected-1)
             elif key == pygame.K_DOWN:
                 self.android_selected = min(len(rows)-1, self.android_selected+1)
@@ -2281,10 +2376,18 @@ class PiTV:
 
         elif self.page == "updates":
             rows = self.update_items()
-            if key == pygame.K_UP:
-                self.updates_selected = max(0, self.updates_selected-1)
-            elif key == pygame.K_DOWN:
+            cols = 2
+            if key == pygame.K_LEFT:
+                if self.updates_selected % cols == 0:
+                    self.focus_sidebar("updates")
+                else:
+                    self.updates_selected = max(0, self.updates_selected-1)
+            elif key == pygame.K_RIGHT:
                 self.updates_selected = min(len(rows)-1, self.updates_selected+1)
+            elif key == pygame.K_UP:
+                self.updates_selected = max(0, self.updates_selected-cols)
+            elif key == pygame.K_DOWN:
+                self.updates_selected = min(len(rows)-1, self.updates_selected+cols)
             elif key in (pygame.K_RETURN, pygame.K_KP_ENTER):
                 if self.updates_selected == 4:
                     self.check_updates_async()

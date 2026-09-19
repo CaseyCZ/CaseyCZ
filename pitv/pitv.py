@@ -1316,29 +1316,29 @@ class PiTV:
     ]
 
     def draw_cec(self):
+        self.draw_sidebar("settings")
         ports = get_hdmi_ports()
         port_text = " · ".join(f"{p['name']} {p['status']}" for p in ports) or "HDMI stav neznámý"
         self.header("HDMI / CEC", port_text)
-        x = int(self.w*.09)
-        y = int(self.h*.19)
+
+        x = self.main_left()+int(self.w*.022)
+        y = int(self.h*.165)
         self.pill("CEC READY" if cec_available() else "CEC CHYBÍ", x, y,
                   self.t["good"] if cec_available() else self.t["bad"])
-        rows = [(a, b) for a, b, _ in self.CEC_ACTIONS]
-        # Rows start lower because of status pill.
-        y0 = int(self.h*.28)
-        row_h = int(self.h*.078)
-        width = int(self.w*.82)
-        for i, (name, desc) in enumerate(rows):
-            rect = pygame.Rect(x, y0+i*row_h, width, int(row_h*.80))
+
+        y0 = int(self.h*.245)
+        row_h = int(self.h*.082)
+        width = self.w-x-int(self.w*.04)
+        for i, (name, desc, _) in enumerate(self.CEC_ACTIONS):
+            rr = pygame.Rect(x, y0+i*row_h, width, int(row_h*.78))
             selected = i == self.cec_selected
-            pygame.draw.rect(self.screen, self.t["accent_soft"] if selected else self.t["panel"],
-                             rect, border_radius=14)
-            pygame.draw.rect(self.screen, self.t["accent"] if selected else self.t["border"],
-                             rect, 2 if selected else 1, border_radius=14)
-            self.text(name, rect.x+22, rect.y+int(rect.h*.18), rect.h*.28, self.t["text"], True)
-            self.text(desc, rect.x+22, rect.y+int(rect.h*.56), rect.h*.19,
+            self.glass_panel(rr, selected, 232, 16)
+            self.text(name, rr.x+22, rr.y+int(rr.h*.18), rr.h*.28, self.t["text"], True)
+            self.text(desc, rr.x+22, rr.y+int(rr.h*.55), rr.h*.18,
                       self.t["accent"] if selected else self.t["muted"])
-        self.text("↑/↓ vybere • OK spustí", x, int(self.h*.90), self.h*.0175, self.t["muted"])
+
+        self.text("↑/↓ vybere • OK spustí • Back návrat",
+                  x, int(self.h*.90), self.h*.016, self.t["muted"])
 
     def app_items(self):
         hidden = set(self.cfg.get("hidden_apps", []))

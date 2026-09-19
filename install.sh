@@ -6,7 +6,7 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
-echo "== PiTV v1.2 installer =="
+echo "== PiTV v1.3 installer =="
 
 . /etc/os-release || true
 case "${ID:-}" in
@@ -44,7 +44,14 @@ done
 install -d -m 0755 /opt/pitv /etc/pitv/apps.d /etc/pitv/store
 install -d -m 0775 -o pitv -g pitv /var/lib/pitv/apks
 install -d -m 0775 -o pitv -g pitv /home/pitv/PiTV/APKs
-cp -a pitv /opt/pitv/
+
+# Replace only the PiTV runtime tree. User settings live in /home/pitv/.config
+# and are intentionally preserved across updates.
+rm -rf /opt/pitv/pitv.new
+cp -a pitv /opt/pitv/pitv.new
+rm -rf /opt/pitv/pitv
+mv /opt/pitv/pitv.new /opt/pitv/pitv
+
 install -m 0644 config/config.json /etc/pitv/config.json
 install -m 0644 store/catalog.json /etc/pitv/store/catalog.json
 install -m 0644 store/server_catalog.json /etc/pitv/store/server_catalog.json

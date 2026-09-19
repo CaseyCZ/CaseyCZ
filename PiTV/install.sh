@@ -6,7 +6,7 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
-echo "== PiTV v1.0 installer =="
+echo "== PiTV v1.1 installer =="
 
 . /etc/os-release || true
 case "${ID:-}" in
@@ -17,6 +17,9 @@ esac
 ARCH="$(dpkg --print-architecture 2>/dev/null || uname -m)"
 echo "Architektura: $ARCH"
 
+apt-get update
+apt-get install -y software-properties-common
+add-apt-repository -y universe >/dev/null 2>&1 || true
 apt-get update
 apt-get install -y \
   python3 python3-pygame \
@@ -38,11 +41,12 @@ for g in video render input audio tty; do
   getent group "$g" >/dev/null && usermod -aG "$g" pitv || true
 done
 
-install -d -m 0755 /opt/pitv /etc/pitv/apps.d
+install -d -m 0755 /opt/pitv /etc/pitv/apps.d /etc/pitv/store
 install -d -m 0775 -o pitv -g pitv /var/lib/pitv/apks
 install -d -m 0775 -o pitv -g pitv /home/pitv/PiTV/APKs
 cp -a pitv /opt/pitv/
 install -m 0644 config/config.json /etc/pitv/config.json
+install -m 0644 store/catalog.json /etc/pitv/store/catalog.json
 cp -a config/apps.d/. /etc/pitv/apps.d/
 install -m 0755 system/pitv-session /usr/local/bin/pitv-session
 install -m 0755 system/pitv-waydroid-launch /usr/local/bin/pitv-waydroid-launch
@@ -80,8 +84,7 @@ echo
 echo "Test bez restartu (z lokální tty): sudo systemctl restart getty@tty1"
 echo "SSH zůstává normálně dostupné."
 echo
-echo "Volitelně nainstaluj Kodi:"
-echo "  sudo apt install kodi"
+echo "Kodi, VLC a Android TV aplikace můžeš teď instalovat přímo z PiTV Store."
 echo
 echo "Pak restartuj:"
 echo "  sudo reboot"

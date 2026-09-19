@@ -15,7 +15,13 @@ jobs:
 
       - name: Python syntax
         run: |
-          python3 -m py_compile             pitv/pitv.py             pitv/apk_backend.py             pitv/store_backend.py             pitv/update_backend.py             system/pitv-helper             system/pitv-self-update
+          python3 -m py_compile \
+            pitv/pitv.py \
+            pitv/apk_backend.py \
+            pitv/store_backend.py \
+            pitv/update_backend.py \
+            system/pitv-helper \
+            system/pitv-self-update
 
       - name: Shell syntax
         run: |
@@ -39,8 +45,26 @@ jobs:
               print("OK", path)
           PY
 
-      - name: Runtime import with Ubuntu Pygame
+      - name: Runtime render with Ubuntu Pygame
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq python3-pygame
-          PYTHONPATH=pitv SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy             python3 -c 'import pitv; print("PiTV runtime import OK", pitv.VERSION)'
+          PYTHONPATH=pitv SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy \
+            python3 - <<'PY'
+          import pygame
+          from pitv import PiTV, VERSION
+
+          app = PiTV()
+          for page in (
+              "home", "settings", "appearance", "screensaver", "network",
+              "audio", "cec", "apps", "store", "server_store", "android",
+              "updates", "system", "power", "about",
+          ):
+              app.page = page
+              app.draw()
+              print("render OK", page)
+
+          assert len(app.SETTINGS) == 12
+          pygame.quit()
+          print("PiTV runtime render OK", VERSION)
+          PY

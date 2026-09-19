@@ -6,7 +6,7 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
-echo "== PiTV v1.1 installer =="
+echo "== PiTV v1.2 installer =="
 
 . /etc/os-release || true
 case "${ID:-}" in
@@ -47,6 +47,7 @@ install -d -m 0775 -o pitv -g pitv /home/pitv/PiTV/APKs
 cp -a pitv /opt/pitv/
 install -m 0644 config/config.json /etc/pitv/config.json
 install -m 0644 store/catalog.json /etc/pitv/store/catalog.json
+install -m 0644 store/server_catalog.json /etc/pitv/store/server_catalog.json
 cp -a config/apps.d/. /etc/pitv/apps.d/
 install -m 0755 system/pitv-session /usr/local/bin/pitv-session
 install -m 0755 system/pitv-waydroid-launch /usr/local/bin/pitv-waydroid-launch

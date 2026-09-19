@@ -22,15 +22,15 @@ PiTV is a lightweight TV shell for **Ubuntu Server ARM64 on Raspberry Pi 4**. Th
 - system health, temperature, RAM, disk, uptime and APT updates
 - restart/power-off confirmations
 - Tailscale status shown in About; Tailscale itself stays a background service
-- SSH remains the maintenance/admin path
+- SSH remains available as an optional recovery/admin path; normal PiTV setup and updates are in the TV UI
 
 ## Install
 
 Ubuntu Server 24.04 ARM64 is the primary target.
 
 ```bash
-unzip PiTV-v1.0.zip
-cd PiTV-v1.0
+git clone --branch pitv-standalone --single-branch https://github.com/CaseyCZ/CaseyCZ.git PiTV
+cd PiTV
 sudo ./install.sh
 sudo reboot
 ```
@@ -58,14 +58,21 @@ PiTV reads package name, label, launchable activity, SDK and Leanback/TV hints w
 
 ### Waydroid
 
-Waydroid is optional because PiTV also works as a pure Linux TV shell. To add the Android backend:
+Waydroid is optional because PiTV also works as a pure Linux TV shell. The normal
+installation path is now directly on the TV:
+
+**Nastavení → Android / APK → Waydroid + Google Play → Instalovat**
+
+PiTV installs the official Waydroid repository and initializes the **GAPPS**
+image. The command-line script remains available only as a recovery/admin path:
 
 ```bash
 sudo ./scripts/install-waydroid.sh
-sudo waydroid init
 ```
 
-Then restart PiTV/Raspberry Pi. Selecting an APK tile installs it with `waydroid app install` when needed and launches the package. HOME on the CEC remote stops the foreground session and returns to PiTV.
+Selecting an APK tile installs it with `waydroid app install` when needed and
+launches the package. HOME on the CEC remote stops the foreground Android session
+and returns to PiTV.
 
 > Raspberry Pi / Waydroid hardware compatibility still has to be verified on the exact Pi 4 image/kernel. PiTV detects a missing backend instead of failing the launcher.
 
@@ -143,7 +150,9 @@ standby mode.
 - Ubuntu package updates
 - PiTV UI restart
 
-Automated check: `.github/workflows/pitv-check.yml` validates Python, shell and Store JSON on PiTV branch pushes.
+Automated checks: `.github/workflows/pitv-check.yml` validates Python, shell,
+Store JSON, both themes and every UI screen. `.github/workflows/pitv-online-smoke.yml`
+performs the heavier install/start/Store tests on Ubuntu x64 and ARM64.
 
 Waydroid is initialized with the GAPPS image so the official Google Play entries for YouTube, Spotify and Plex can be opened from PiTV Store. Waydroid may require Google Play device certification on first use.
 

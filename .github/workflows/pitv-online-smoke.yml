@@ -3,6 +3,13 @@ name: PiTV Online Smoke
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: pitv-online-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   install-and-launch:
     name: Install + launch (${{ matrix.runner }})

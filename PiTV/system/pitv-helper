@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+import json, os, shutil, subprocess, sys
+
+def out(msg, code=0):
+    print(msg)
+    raise SystemExit(code)
+
+def run(args, timeout=600, stdin=None, env=None):
+    p = subprocess.run(args, input=stdin, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                       text=True, timeout=timeout, check=False, env=env)
+    text = (p.stdout or "").strip()
+    if p.returncode != 0:
+        out(text or f"Chyba ({p.returncode})", p.returncode)
+    return text
+
+if os.geteuid() != 0:
+    out("PiTV helper musí běžet jako root", 1)
+
+action = sys.argv[1] if len(sys.argv) > 1 else ""
+try:
+    payload = json.loads(sys.stdin.read() or "{}")
+except Exception:
+    payload = {}
+
+if action == "wifi-radio":
+    enabled = bool(payload.get("enabled"))
+    run(["nmcli", "radio", "wifi", "on" if enabled else "off"], timeout=20)
+    out("Wi‑Fi zapnuto" if enabled else "Wi‑Fi vypnuto")
+
+elif action == "wifi-connect":
+    ssid = str(payload.get("ssid",""))[:128]
+    password = str(payload.get("password",""))[:256]
+    if not ssid:
+        out("Chybí SSID", 2)
+    args = ["nmcli", "device", "wifi", "connect", ssid]
+    if password:
+        args += ["password", password]
+    text = run(args, timeout=45)
+    out(text or f"Připojeno k {ssid}")
+
+elif action == "wifi-disconnect":
+    dev = str(payload.get("device",""))[:64]
+    if not dev or not dev.replace("-","").replace("_","").isalnum():
+        out("Neplatné Wi‑Fi zařízení", 2)
+    run(["nmcli", "device", "disconnect", dev], timeout=20)
+    out(f"{dev} odpojeno")
+
+elif action == "waydroid-container-start":
+    if shutil.which("waydroid") is None:
+        out("Waydroid není nainstalovaný", 2)
+    run(["waydroid", "container", "start"], timeout=60)
+    out("Waydroid container spuštěn")
+
+elif action == "waydroid-container-stop":
+    if shutil.which("waydroid") is None:
+        out("Waydroid není nainstalovaný", 2)
+    run(["waydroid", "container", "stop"], timeout=60)
+    out("Waydroid container zastaven")
+
+elif action == "apt-update":
+    env = os.environ.copy()
+    env["DEBIAN_FRONTEND"] = "noninteractive"
+    run(["apt-get", "update"], timeout=300, env=env)
+    out("Seznam aktualizací obnoven")
+
+elif action == "apt-upgrade":
+    env = os.environ.copy()
+    env["DEBIAN_FRONTEND"] = "noninteractive"
+    run(["apt-get", "-y", "upgrade"], timeout=1200, env=env)
+    out("Aktualizace nainstalovány")
+
+else:
+    out("Nepovolená akce", 2)

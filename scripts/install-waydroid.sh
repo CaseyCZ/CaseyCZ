@@ -8,8 +8,11 @@ fi
 
 apt-get update
 apt-get install -y curl ca-certificates
-curl -fsSL https://repo.waydro.id -o /tmp/waydroid-repo.sh
-bash /tmp/waydroid-repo.sh
+TMP_SCRIPT="$(mktemp /tmp/pitv-waydroid.XXXXXX.sh)"
+trap 'rm -f "$TMP_SCRIPT"' EXIT
+curl -fsSL https://repo.waydro.id -o "$TMP_SCRIPT"
+chmod 0700 "$TMP_SCRIPT"
+bash "$TMP_SCRIPT"
 apt-get update
 apt-get install -y waydroid
 

@@ -61,6 +61,7 @@ install -m 0755 system/pitv-waydroid-launch /usr/local/bin/pitv-waydroid-launch
 install -d -m 0755 /usr/local/libexec
 install -m 0755 system/pitv-helper /usr/local/libexec/pitv-helper
 install -m 0755 system/pitv-self-update /usr/local/libexec/pitv-self-update
+install -m 0755 scripts/install-waydroid.sh /usr/local/libexec/pitv-install-waydroid
 
 install -d -o pitv -g pitv /home/pitv/.config/pitv
 install -d -o pitv -g pitv /home/pitv/.config/labwc

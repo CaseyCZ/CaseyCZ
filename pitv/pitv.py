@@ -20,7 +20,7 @@ from store_backend import (download_direct_apk, download_github_apk,
 from update_backend import is_newer, remote_pitv_version
 
 APP_NAME = "PiTV"
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 
 SYSTEM_CONFIG = Path("/etc/pitv/config.json")
 USER_CONFIG = Path.home() / ".config/pitv/config.json"
@@ -30,7 +30,7 @@ SYSTEM_SERVER_CATALOG = Path("/etc/pitv/store/server_catalog.json")
 LAUNCH_FILE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "pitv-launch.json"
 
 DEFAULT_CONFIG = {
-    "theme": "dark",
+    "theme": "apple_dark",
     "accent": "blue",
     "tile_scale": 1.0,
     "cec_enabled": True,
@@ -50,7 +50,7 @@ DEFAULT_CONFIG = {
 }
 
 THEMES = {
-    "dark": {
+    "apple_dark": {
         # CaseyCZ / iOS Hub palette
         "page": (7, 11, 20),          # #070b14
         "bg": (11, 16, 32),           # #0b1020
@@ -70,7 +70,7 @@ THEMES = {
         "bad": (252, 165, 165),       # #fca5a5
         "hero": (23, 37, 84),         # #172554
     },
-    "light": {
+    "apple_light": {
         "page": (238, 243, 248),      # #eef3f8
         "bg": (248, 250, 252),        # #f8fafc
         "panel": (255, 255, 255),     # #ffffff
@@ -613,7 +613,22 @@ class PiTV:
 
     @property
     def t(self):
-        return THEMES.get(self.cfg.get("theme"), THEMES["dark"])
+        theme = self.cfg.get("theme", "apple_dark")
+        theme = {"dark": "apple_dark", "light": "apple_light"}.get(theme, theme)
+        return THEMES.get(theme, THEMES["apple_dark"])
+
+    @property
+    def theme_name(self):
+        theme = self.cfg.get("theme", "apple_dark")
+        theme = {"dark": "apple_dark", "light": "apple_light"}.get(theme, theme)
+        return "PiTV Apple Light" if theme == "apple_light" else "PiTV Apple Dark"
+
+    def main_left(self):
+        return int(self.w * .235)
+
+    def main_rect(self):
+        left = self.main_left()
+        return pygame.Rect(left, int(self.h*.035), self.w-left-int(self.w*.025), int(self.h*.93))
 
     def font(self, size, bold=False):
         return pygame.font.SysFont("DejaVu Sans", max(16, int(size)), bold=bold)
@@ -671,19 +686,83 @@ class PiTV:
         self.screen.blit(surf, (r.x+pad_x, r.y+pad_y))
         return r
 
+    def glass_panel(self, rect, selected=False, alpha=225, radius=22):
+        surface = pygame.Surface((rect.w, rect.h), pygame.SRCALPHA)
+        base = self.t["accent_soft"] if selected else self.t["panel"]
+        pygame.draw.rect(surface, (*base, alpha), surface.get_rect(), border_radius=radius)
+        self.screen.blit(surface, rect.topleft)
+        pygame.draw.rect(
+            self.screen,
+            self.t["accent"] if selected else self.t["border"],
+            rect,
+            2 if selected else 1,
+            border_radius=radius,
+        )
+
+    def draw_sidebar(self, active=""):
+        w = int(self.w*.205)
+        rect = pygame.Rect(int(self.w*.025), int(self.h*.035), w, int(self.h*.93))
+        self.glass_panel(rect, False, 218, 26)
+
+        x = rect.x + int(w*.11)
+        top = rect.y + int(self.h*.035)
+        mark = pygame.Rect(x, top, int(self.h*.055), int(self.h*.055))
+        self.gradient_rect(mark, self.t["accent2"], self.t["action"], radius=14)
+        play = self.font(mark.h*.34, True).render("▶", True, (255,255,255))
+        self.screen.blit(play, play.get_rect(center=mark.center))
+        self.text("PiTV", mark.right+14, top-3, self.h*.041, self.t["text"], True)
+        self.text("Your TV. Your Way.", x, top+int(self.h*.065), self.h*.015, self.t["muted"])
+
+        items = [
+            ("home", "⌂", "Domů"),
+            ("store", "▣", "Store"),
+            ("server_store", "◉", "Server Store"),
+            ("android", "◆", "Android / APK"),
+            ("updates", "↻", "Aktualizace"),
+            ("settings", "⚙", "Nastavení"),
+        ]
+        y0 = top + int(self.h*.115)
+        row_h = int(self.h*.058)
+        for i, (key, icon, label) in enumerate(items):
+            rr = pygame.Rect(rect.x+int(w*.055), y0+i*row_h, int(w*.89), int(row_h*.82))
+            selected = key == active
+            if selected:
+                surf = pygame.Surface((rr.w, rr.h), pygame.SRCALPHA)
+                pygame.draw.rect(surf, (*self.t["accent_soft"], 235), surf.get_rect(), border_radius=14)
+                self.screen.blit(surf, rr.topleft)
+                pygame.draw.rect(self.screen, self.t["accent"], rr, 2, border_radius=14)
+            self.text(icon, rr.x+14, rr.y+int(rr.h*.20), rr.h*.36,
+                      self.t["accent"] if selected else self.t["muted"], True)
+            self.text(label, rr.x+int(rr.h*.75), rr.y+int(rr.h*.25), rr.h*.25,
+                      self.t["text"] if selected else self.t["muted"], selected)
+
+        divider_y = y0 + len(items)*row_h + int(self.h*.012)
+        pygame.draw.line(self.screen, self.t["border"],
+                         (rect.x+int(w*.08), divider_y),
+                         (rect.right-int(w*.08), divider_y), 1)
+        self.text("PiTV  "+VERSION, x, rect.bottom-int(self.h*.055), self.h*.014, self.t["muted"])
+
+    def draw_hero(self, title, subtitle, badge="PiTV", action=""):
+        r = pygame.Rect(self.main_left()+int(self.w*.015), int(self.h*.055),
+                        int(self.w*.72), int(self.h*.265))
+        self.gradient_rect(r, self.t["hero"], self.t["bg"], radius=24)
+        pygame.draw.rect(self.screen, self.t["border"], r, 1, border_radius=24)
+        self.text(str(badge).upper(), r.x+34, r.y+28, self.h*.015, self.t["muted"], True)
+        self.text(title, r.x+34, r.y+int(self.h*.065), self.h*.050, self.t["text"], True)
+        self.text(subtitle, r.x+36, r.y+int(self.h*.135), self.h*.020, self.t["muted"])
+        if action:
+            ar = pygame.Rect(r.x+36, r.bottom-int(self.h*.072), int(self.w*.12), int(self.h*.048))
+            self.gradient_rect(ar, self.t["accent2"], self.t["action"], radius=ar.h//2)
+            surf = self.font(ar.h*.27, True).render(action, True, (255,255,255))
+            self.screen.blit(surf, surf.get_rect(center=ar.center))
+        return r
+
     def header(self, title, subtitle=None):
-        left = int(self.w*.055)
-        top = int(self.h*.065)
-        # Brand mark follows iOS Hub's blue gradient mark.
-        mark = pygame.Rect(left, top, int(self.h*.058), int(self.h*.058))
-        self.gradient_rect(mark, self.t["action2"], self.t["action"], radius=14)
-        label = "TV" if title == "PiTV" else "‹"
-        fs = mark.h*.30 if title == "PiTV" else mark.h*.48
-        txt = self.font(fs, True).render(label, True, (255,255,255))
-        self.screen.blit(txt, txt.get_rect(center=mark.center))
-        self.text(title, mark.right+18, top-3, self.h*.045, bold=True)
+        left = self.main_left()+int(self.w*.018)
+        top = int(self.h*.058)
+        self.text(title, left, top, self.h*.043, self.t["text"], True)
         if subtitle:
-            self.text(subtitle, mark.right+20, top+int(self.h*.041), self.h*.0175, self.t["muted"])
+            self.text(subtitle, left+2, top+int(self.h*.049), self.h*.017, self.t["muted"])
 
     def card(self, rect, title, subtitle="", selected=False, icon=""):
         radius = 18
@@ -1051,103 +1130,131 @@ class PiTV:
         return items
 
     def draw_home(self):
-        self.header("PiTV", "TV launcher · Raspberry Pi")
+        self.draw_sidebar("home")
         items = self.home_items()
-        cols = 4 if self.w >= 1500 else 3
-        gap = int(self.w*.014)
-        margin = int(self.w*.055)
-
-        # Small iOS Hub-style status pills.
-        ypill = int(self.h*.155)
-        self.pill("READY", margin, ypill, self.t["good"])
-        x2 = margin + int(self.w*.075)
-        self.pill("CEC" if self.cfg.get("cec_enabled", True) else "CEC OFF",
-                  x2, ypill, self.t["accent"] if self.cfg.get("cec_enabled", True) else self.t["bad"])
-        apk_count = sum(1 for a in self.apps if a.get("kind") == "apk")
-        x3 = x2 + int(self.w*.07)
-        self.pill(f"APK {apk_count}", x3, ypill, self.t["accent"] if apk_count else self.t["muted"])
-
-        top = int(self.h*.245)
-        tile_w = int((self.w - 2*margin - (cols-1)*gap) / cols)
-        tile_h = int(tile_w * .51 * float(self.cfg.get("tile_scale", 1.0)))
-        for i, item in enumerate(items):
-            r, c = divmod(i, cols)
-            rect = pygame.Rect(margin+c*(tile_w+gap), top+r*(tile_h+gap), tile_w, tile_h)
-            self.card(rect, item["name"], item["subtitle"], i == self.selected, item["icon"])
+        hero = self.draw_hero(
+            "PiTV",
+            "Aplikace, média a server na jednom místě.",
+            "TV · RASPBERRY PI",
+            "Procházet",
+        )
 
         if self.cfg.get("show_clock", True):
-            clock_text = time.strftime("%H:%M")
-            surf = self.font(self.h*.034, True).render(clock_text, True, self.t["text"])
-            cx = self.w - surf.get_width() - margin
-            cy = int(self.h*.075)
-            self.screen.blit(surf, (cx, cy))
-            date_s = time.strftime("%d.%m.%Y")
-            ds = self.font(self.h*.016, False).render(date_s, True, self.t["muted"])
-            self.screen.blit(ds, (cx + surf.get_width() - ds.get_width(), cy + int(self.h*.04)))
+            clock = self.font(self.h*.026, True).render(time.strftime("%H:%M"), True, self.t["text"])
+            self.screen.blit(clock, (hero.right-clock.get_width()-26, hero.y+22))
 
-    SETTINGS = [
-        ("Vzhled", "Motiv, dlaždice a hodiny"),
-        ("Spořič obrazovky", "Nečinnost, černá obrazovka a CEC standby"),
-        ("Síť", "Ethernet, Wi‑Fi a IP adresy"),
-        ("Zvuk", "HDMI audio a hlasitost TV"),
-        ("HDMI / CEC", "TV ovladač a ovládání televize"),
-        ("Aplikace", "PiTV Store a aplikace na domovské obrazovce"),
-        ("Server Store", "Homebridge, Tailscale, Docker a ATVLoadly"),
-        ("Android / APK", "APK inspector a Waydroid backend"),
-        ("Aktualizace", "PiTV, Store aplikace a Ubuntu"),
-        ("Systém", "Stav Raspberry Pi"),
-        ("Napájení", "Restart nebo vypnutí"),
-        ("O PiTV", "Verze a informace"),
-    ]
+        x = self.main_left()+int(self.w*.018)
+        y = hero.bottom+int(self.h*.025)
+        self.text("Aplikace", x, y, self.h*.024, self.t["text"], True)
+        y += int(self.h*.045)
+
+        cols = 5 if self.w >= 1500 else 4
+        gap = int(self.w*.012)
+        area_w = self.w-x-int(self.w*.035)
+        tile_w = int((area_w-(cols-1)*gap)/cols)
+        tile_h = int(self.h*.145*float(self.cfg.get("tile_scale",1.0)))
+
+        for i, item in enumerate(items):
+            row, col = divmod(i, cols)
+            rr = pygame.Rect(x+col*(tile_w+gap), y+row*(tile_h+int(self.h*.055)), tile_w, tile_h)
+            self.glass_panel(rr, i == self.selected, 232, 18)
+            icon_box = pygame.Rect(rr.x+16, rr.y+14, int(rr.h*.42), int(rr.h*.42))
+            self.gradient_rect(icon_box, self.t["accent2"], self.t["action"], radius=12)
+            icon = self.font(icon_box.h*.35, True).render(str(item.get("icon","▶")), True, (255,255,255))
+            self.screen.blit(icon, icon.get_rect(center=icon_box.center))
+            self.text(item["name"], rr.x+16, rr.bottom-int(rr.h*.37), rr.h*.16, self.t["text"], True)
+            self.text(item.get("subtitle",""), rr.x+16, rr.bottom-int(rr.h*.18), rr.h*.105, self.t["muted"])
 
     def draw_settings(self):
-        self.header("Nastavení", "← Back / Esc pro návrat")
-        margin = int(self.w*.09)
-        top = int(self.h*.18)
+        self.draw_sidebar("settings")
+        self.header("Nastavení", "Všechno důležité pro PiTV na jednom místě")
+
+        left = self.main_left()+int(self.w*.018)
+        top = int(self.h*.165)
+        list_w = int(self.w*.34)
+        panel_w = self.w-left-list_w-int(self.w*.055)
         row_h = int(self.h*.055)
-        gap = int(self.h*.005)
-        width = int(self.w*.82)
+
         for i, (name, desc) in enumerate(self.SETTINGS):
+            rr = pygame.Rect(left, top+i*row_h, list_w, int(row_h*.82))
             selected = i == self.settings_selected
-            rect = pygame.Rect(margin, top+i*(row_h+gap), width, row_h)
-            pygame.draw.rect(self.screen, self.t["accent_soft"] if selected else self.t["panel"],
-                             rect, border_radius=16)
-            pygame.draw.rect(self.screen, self.t["accent"] if selected else self.t["border"],
-                             rect, 3 if selected else 1, border_radius=16)
-            self.text(name, rect.x+28, rect.y+10, row_h*.30, self.t["text"], True)
-            self.text(desc, rect.x+28, rect.y+int(row_h*.53), row_h*.19,
-                      self.t["accent"] if selected else self.t["muted"])
+            if selected:
+                self.glass_panel(rr, True, 235, 14)
+            self.text(name, rr.x+18, rr.y+int(rr.h*.22), rr.h*.28,
+                      self.t["text"] if selected else self.t["muted"], selected)
+
+        detail = pygame.Rect(left+list_w+int(self.w*.018), top,
+                             panel_w, int(self.h*.64))
+        self.glass_panel(detail, False, 225, 22)
+        name, desc = self.SETTINGS[self.settings_selected]
+        self.text(name, detail.x+30, detail.y+28, self.h*.032, self.t["text"], True)
+        self.text(desc, detail.x+30, detail.y+int(self.h*.075), self.h*.019, self.t["muted"])
+
+        if name == "Vzhled":
+            self.text("Téma", detail.x+30, detail.y+int(self.h*.145), self.h*.017, self.t["muted"], True)
+            options = [("PiTV Apple Dark", "Tmavé glass rozhraní"), ("PiTV Apple Light", "Světlé čisté rozhraní")]
+            for j,(label,sub) in enumerate(options):
+                rr = pygame.Rect(detail.x+30, detail.y+int(self.h*(.19+j*.115)),
+                                 detail.w-60, int(self.h*.09))
+                current = (j==0 and self.theme_name.endswith("Dark")) or (j==1 and self.theme_name.endswith("Light"))
+                self.glass_panel(rr, current, 238, 16)
+                self.text(label, rr.x+18, rr.y+14, self.h*.021, self.t["text"], True)
+                self.text(sub, rr.x+18, rr.y+int(self.h*.047), self.h*.015, self.t["muted"])
+        else:
+            bullets = {
+                "Spořič obrazovky": ["Hodiny / černá obrazovka", "CEC standby TV", "PiTV běží dál 24/7"],
+                "Síť": ["Ethernet a Wi‑Fi", "IP adresa a stav", "Připojení ovladačem"],
+                "Zvuk": ["Pouze HDMI", "Hlasitost přes CEC", "Test zvuku"],
+                "HDMI / CEC": ["Zapnout / uspat TV", "Aktivní HDMI vstup", "Ovladač TV"],
+                "Aplikace": ["PiTV Store", "Skrýt / zobrazit aplikace", "Android aplikace"],
+                "Server Store": ["Homebridge", "Tailscale", "Docker", "ATVLoadly"],
+                "Android / APK": ["Waydroid", "APK inspector", "Google Play"],
+                "Aktualizace": ["PiTV", "Store katalogy", "Ubuntu balíčky"],
+                "Systém": ["Teplota", "RAM a disk", "Uptime"],
+                "Napájení": ["Restart", "Vypnutí serveru", "Potvrzení akce"],
+                "O PiTV": ["Verze "+VERSION, "Standalone build", self.theme_name],
+            }.get(name, [desc])
+            yy = detail.y+int(self.h*.145)
+            for b in bullets:
+                self.pill(b, detail.x+30, yy, self.t["accent"])
+                yy += int(self.h*.055)
+        self.text("↑/↓ vybere • OK otevře • Back návrat",
+                  left, int(self.h*.91), self.h*.016, self.t["muted"])
 
     def draw_rows(self, title, subtitle, rows, selected=0, footer=""):
+        self.draw_sidebar("settings")
         self.header(title, subtitle)
-        x = int(self.w*.09)
-        y0 = int(self.h*.205)
+        x = self.main_left()+int(self.w*.022)
+        y0 = int(self.h*.165)
         row_h = int(self.h*.071)
-        width = int(self.w*.82)
+        width = self.w-x-int(self.w*.04)
+        panel = pygame.Rect(x-int(self.w*.008), y0-int(self.h*.012),
+                            width+int(self.w*.016), int(self.h*.64))
+        self.glass_panel(panel, False, 218, 22)
         for i, row in enumerate(rows):
             label, value = row[0], row[1]
             y = y0+i*row_h
-            rect = pygame.Rect(x, y, width, int(row_h*.82))
+            rr = pygame.Rect(x, y, width, int(row_h*.82))
             active = i == selected
             if active:
-                pygame.draw.rect(self.screen, self.t["accent_soft"], rect, border_radius=14)
-                pygame.draw.rect(self.screen, self.t["accent"], rect, 2, border_radius=14)
-            self.text(label, rect.x+22, rect.y+int(rect.h*.27), rect.h*.27,
+                self.glass_panel(rr, True, 235, 14)
+            self.text(label, rr.x+22, rr.y+int(rr.h*.27), rr.h*.27,
                       self.t["text"] if active else self.t["muted"], active)
-            surf = self.font(rect.h*.25, True).render(str(value), True,
+            val = str(value)
+            surf = self.font(rr.h*.25, True).render(val, True,
                         self.t["accent"] if active else self.t["text"])
-            maxw = int(rect.w*.50)
-            while surf.get_width() > maxw and len(str(value)) > 4:
-                value = str(value)[:-2] + "…"
-                surf = self.font(rect.h*.25, True).render(value, True,
+            maxw = int(rr.w*.47)
+            while surf.get_width() > maxw and len(val) > 4:
+                val = val[:-2] + "…"
+                surf = self.font(rr.h*.25, True).render(val, True,
                             self.t["accent"] if active else self.t["text"])
-            self.screen.blit(surf, (rect.right-surf.get_width()-22,
-                                    rect.y+int(rect.h*.28)))
+            self.screen.blit(surf, (rr.right-surf.get_width()-22,
+                                    rr.y+int(rr.h*.28)))
         if footer:
-            self.text(footer, x, int(self.h*.91), self.h*.0175, self.t["muted"])
+            self.text(footer, x, int(self.h*.91), self.h*.016, self.t["muted"])
 
     def draw_appearance(self):
-        theme = "Tmavý" if self.cfg.get("theme") == "dark" else "Světlý"
+        theme = self.theme_name
         scale = float(self.cfg.get("tile_scale", 1.0))
         scale_name = "Malé" if scale < .95 else ("Velké" if scale > 1.05 else "Normální")
         rows = [
@@ -1155,7 +1262,7 @@ class PiTV:
             ("Velikost dlaždic", scale_name),
             ("Hodiny na ploše", "Zapnuto" if self.cfg.get("show_clock") else "Vypnuto"),
         ]
-        self.draw_rows("Vzhled", "CaseyCZ / PiTV vizuální styl", rows, self.sub_selected,
+        self.draw_rows("Vzhled", "Dvě sjednocená PiTV Apple témata", rows, self.sub_selected,
                        "↑/↓ vybere • ←/→ změní")
 
     def draw_screensaver_settings(self):
@@ -1285,27 +1392,43 @@ class PiTV:
         threading.Thread(target=worker, daemon=True).start()
 
     def draw_store(self):
+        self.draw_sidebar("store")
         items = self.store_catalog
         if not items:
-            self.draw_rows("PiTV Store", "Katalog aplikací", [("Store", "Katalog je prázdný")], 0,
-                           "Katalog: /etc/pitv/store/catalog.json")
+            self.header("PiTV Store", "Katalog aplikací")
+            self.text("Katalog je prázdný", self.main_left()+40, int(self.h*.25), self.h*.025)
             return
 
-        rows = []
-        for item in items:
-            state = self.store_states.get(item.get("id",""), "checking")
-            if self.store_busy_id == item.get("id"):
-                status = "Instaluji…"
-            else:
-                status = self.STORE_STATE_LABELS.get(state, state)
-            platform = "ANDROID" if item.get("platform") == "android" else "LINUX"
-            rows.append((item.get("name","Aplikace"), f"{platform} · {status}"))
+        selected_item = items[min(self.store_selected, len(items)-1)]
+        state = self.store_states.get(selected_item.get("id",""), "checking")
+        status = "Instaluji…" if self.store_busy_id == selected_item.get("id") else self.STORE_STATE_LABELS.get(state,state)
+        self.draw_hero(
+            selected_item.get("name","Aplikace"),
+            selected_item.get("description","Aplikace pro PiTV"),
+            f"{selected_item.get('platform','').upper()} · {status}",
+            "OK · Instalovat" if state != "installed" else "Nainstalováno",
+        )
 
-        visible = 8
-        start = max(0, min(self.store_selected-visible//2, max(0, len(rows)-visible)))
-        self.draw_rows("PiTV Store", "Ověřený katalog pro Raspberry Pi / TV",
-                       rows[start:start+visible], self.store_selected-start,
-                       "OK = stáhnout a nainstalovat • Android aplikace vyžadují Waydroid")
+        x = self.main_left()+int(self.w*.018)
+        y = int(self.h*.355)
+        self.text("Doporučené", x, y, self.h*.024, self.t["text"], True)
+        y += int(self.h*.045)
+        cols = 3
+        gap = int(self.w*.015)
+        area_w = self.w-x-int(self.w*.035)
+        tile_w = int((area_w-(cols-1)*gap)/cols)
+        tile_h = int(self.h*.145)
+        for i,item in enumerate(items):
+            rr = pygame.Rect(x+(i%cols)*(tile_w+gap),
+                             y+(i//cols)*(tile_h+int(self.h*.05)), tile_w, tile_h)
+            selected = i == self.store_selected
+            self.glass_panel(rr, selected, 232, 18)
+            st = self.store_states.get(item.get("id",""), "checking")
+            st_label = "Instaluji…" if self.store_busy_id == item.get("id") else self.STORE_STATE_LABELS.get(st,st)
+            self.text(item.get("name","Aplikace"), rr.x+18, rr.y+18, rr.h*.18, self.t["text"], True)
+            self.text(item.get("category","Aplikace"), rr.x+18, rr.y+int(rr.h*.44), rr.h*.12, self.t["muted"])
+            self.pill(st_label, rr.x+18, rr.bottom-int(rr.h*.31),
+                      self.t["good"] if st=="installed" else self.t["accent"])
 
     def install_store_item(self, item):
         store_id = item.get("id","")
@@ -1452,25 +1575,41 @@ class PiTV:
         return label
 
     def draw_server_store(self):
+        self.draw_sidebar("server_store")
         items = self.server_store_catalog
         if not items:
-            self.draw_rows("Server Store", "Služby běžící na pozadí",
-                           [("Server Store", "Katalog je prázdný")], 0,
-                           "Katalog: /etc/pitv/store/server_catalog.json")
+            self.header("Server Store", "Služby na pozadí")
+            self.text("Katalog je prázdný", self.main_left()+40, int(self.h*.25), self.h*.025)
             return
 
-        rows = [(item.get("name","Služba"), self.server_store_status_label(item))
-                for item in items]
-        visible = 8
-        start = max(0, min(self.server_store_selected-visible//2,
-                           max(0, len(rows)-visible)))
-        self.draw_rows(
-            "Server Store",
-            "Instalace serverových služeb na pozadí",
-            rows[start:start+visible],
-            self.server_store_selected-start,
-            "OK = nainstalovat / dokončit nastavení • služby běží i když je TV vypnutá"
+        selected_item = items[min(self.server_store_selected, len(items)-1)]
+        status = self.server_store_status_label(selected_item)
+        self.draw_hero(
+            selected_item.get("name","Služba"),
+            selected_item.get("description","Serverová služba pro PiTV"),
+            f"SERVER · {status}",
+            "OK · Spravovat",
         )
+
+        x = self.main_left()+int(self.w*.018)
+        y = int(self.h*.355)
+        self.text("Služby na pozadí", x, y, self.h*.024, self.t["text"], True)
+        y += int(self.h*.045)
+        cols = 2
+        gap = int(self.w*.015)
+        area_w = self.w-x-int(self.w*.035)
+        tile_w = int((area_w-gap)/cols)
+        tile_h = int(self.h*.145)
+        for i,item in enumerate(items):
+            rr = pygame.Rect(x+(i%cols)*(tile_w+gap),
+                             y+(i//cols)*(tile_h+int(self.h*.045)), tile_w, tile_h)
+            selected = i == self.server_store_selected
+            self.glass_panel(rr, selected, 232, 18)
+            status = self.server_store_status_label(item)
+            self.text(item.get("name","Služba"), rr.x+20, rr.y+18, rr.h*.18, self.t["text"], True)
+            self.text(item.get("category","Server"), rr.x+20, rr.y+int(rr.h*.44), rr.h*.12, self.t["muted"])
+            self.pill(status, rr.x+20, rr.bottom-int(rr.h*.31),
+                      self.t["good"] if ("Běží" in status or "Nainstalováno" in status) else self.t["accent"])
 
     def install_server_store_item(self, item):
         sid = item.get("id", "")
@@ -1578,12 +1717,27 @@ class PiTV:
         ]
 
     def draw_updates(self):
+        self.draw_sidebar("updates")
         rows = self.update_items()
-        visible = 8
-        start = max(0, min(self.updates_selected-visible//2, max(0, len(rows)-visible)))
-        self.draw_rows("Aktualizace", "Vše k PiTV přímo z TV rozhraní",
-                       rows[start:start+visible], self.updates_selected-start,
-                       "PiTV se aktualizuje z GitHubu • uživatelské nastavení zůstává zachováno")
+        self.header("Aktualizace", "PiTV, Store a systém na jednom místě")
+
+        x = self.main_left()+int(self.w*.02)
+        top = int(self.h*.165)
+        cols = 2
+        gap = int(self.w*.018)
+        tile_w = int((self.w-x-int(self.w*.05)-gap)/2)
+        tile_h = int(self.h*.115)
+
+        for i,(label,value) in enumerate(rows):
+            rr = pygame.Rect(x+(i%cols)*(tile_w+gap),
+                             top+(i//cols)*(tile_h+int(self.h*.022)), tile_w, tile_h)
+            selected = i == self.updates_selected
+            self.glass_panel(rr, selected, 232, 18)
+            self.text(label, rr.x+20, rr.y+16, rr.h*.20, self.t["text"], True)
+            self.text(str(value), rr.x+20, rr.y+int(rr.h*.52), rr.h*.145,
+                      self.t["accent"] if selected else self.t["muted"])
+        self.text("OK = provést vybranou akci • aktualizace PiTV zachová nastavení",
+                  x, int(self.h*.91), self.h*.016, self.t["muted"])
 
     def check_updates_async(self):
         if self.updates_busy:
@@ -1974,7 +2128,9 @@ class PiTV:
             elif key == pygame.K_DOWN: self.sub_selected = min(2, self.sub_selected+1)
             elif key in (pygame.K_LEFT, pygame.K_RIGHT):
                 if self.sub_selected == 0:
-                    self.cfg["theme"] = "light" if self.cfg.get("theme") == "dark" else "dark"
+                    current = {"dark":"apple_dark","light":"apple_light"}.get(
+                        self.cfg.get("theme","apple_dark"), self.cfg.get("theme","apple_dark"))
+                    self.cfg["theme"] = "apple_light" if current == "apple_dark" else "apple_dark"
                 elif self.sub_selected == 1:
                     vals = [.85, 1.0, 1.15]
                     cur = min(range(len(vals)), key=lambda i: abs(vals[i]-float(self.cfg.get("tile_scale",1))))

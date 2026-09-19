@@ -1101,6 +1101,15 @@ class PiTV:
         return max(0.0, (time.monotonic() - self.last_activity) / 60.0)
 
     def update_idle_state(self):
+        # Never run PiTV screensaver/CEC standby while Kodi or Android is
+        # actively in the foreground. Playback can be idle from PiTV's point
+        # of view for hours and must not turn the television off.
+        if self.external_kind:
+            self.last_activity = time.monotonic()
+            self.screensaver_stage = "off"
+            self.cec_standby_sent = False
+            return
+
         if self.screensaver_preview:
             self.screensaver_stage = "clock"
             return

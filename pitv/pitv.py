@@ -2051,6 +2051,8 @@ class PiTV:
                                  stderr=subprocess.DEVNULL)
             except Exception:
                 pass
+            self.apps = load_apps()
+            self.refresh_store_async()
         self.page = "home"
         self.show_toast("PiTV")
 
@@ -2503,8 +2505,12 @@ class PiTV:
                     self.handle_key(event.key)
 
             if self.external_proc is not None and self.external_proc.poll() is not None:
+                finished_kind = self.external_kind
                 self.external_proc = None
                 self.external_kind = None
+                if finished_kind == "apk":
+                    self.apps = load_apps()
+                    self.refresh_store_async()
 
             self.update_idle_state()
             if self.screensaver_stage != "off":

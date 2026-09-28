@@ -8,7 +8,14 @@
 </p>
 
 <p align="center">
-  Stavím praktické nástroje, které bych sám chtěl používat — od správy Homebridge přes herní kalendář až po iPhone widgety, iOS zdroje, cestovní nástroje a Stremio doplňky.
+  Stavím praktické aplikace a nástroje, které bych sám chtěl používat — pro <strong>iPhone, Apple TV, Homebridge, Raspberry Pi, Windows, web a Stremio</strong>.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/iOS%20%2F%20iPadOS-SwiftUI-38BDF8?style=flat-square&labelColor=0284C7&logo=apple&logoColor=white" alt="iOS / iPadOS" />
+  <img src="https://img.shields.io/badge/tvOS-Apple%20TV-38BDF8?style=flat-square&labelColor=0284C7&logo=apple&logoColor=white" alt="tvOS" />
+  <img src="https://img.shields.io/badge/Raspberry%20Pi-Linux-172033?style=flat-square&labelColor=111827&logo=raspberrypi&logoColor=white" alt="Raspberry Pi" />
+  <img src="https://img.shields.io/badge/GitHub-Actions-172033?style=flat-square&labelColor=111827&logo=githubactions&logoColor=white" alt="GitHub Actions" />
 </p>
 
 <p align="center">
@@ -18,22 +25,89 @@
 ## Aktuální projekty
 
 <table>
-  <thead><tr><th>Projekt</th><th>Verze</th><th>Info</th><th>Odkazy</th></tr></thead>
+  <thead><tr><th>Projekt</th><th>Stav / verze</th><th>Info</th><th>Odkazy</th></tr></thead>
   <tbody>
-    <tr><td><strong>PiTV</strong></td><td><code>v1.3</code></td><td>Lehký TV launcher pro Raspberry Pi 4 nad Ubuntu Serverem, s PiTV Store, Server Store, HDMI-CEC a Android/Waydroid backendem.</td><td><a href="https://github.com/CaseyCZ/PiTV"><img src="https://img.shields.io/badge/GitHub-PiTV-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="PiTV GitHub" /></a></td></tr>
-    <tr><td><strong>Homebridge Manager</strong></td><td><code>v0.6.4</code></td><td>Mobilní správa Homebridge navržená pro iPhone a PWA.</td><td><a href="https://caseycz.github.io/homebridge-manager/"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Homebridge Manager web" /></a></td></tr>
-    <tr><td><strong>GameS Calendar</strong></td><td><code>v3.1.5</code></td><td>Herní kalendář a vyhledávač připravovaných i vydaných her.</td><td><a href="https://130.61.49.108/games/"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="GameS web" /></a> <a href="https://github.com/CaseyCZ/GameS-Calendar-Website"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="GameS GitHub" /></a></td></tr>
-    <tr><td><strong>Scriptable Apps</strong></td><td><code>více aplikací</code></td><td>Widgety a nástroje pro iPhone včetně Sports Info a LockScreen Generator.</td><td><a href="https://caseycz.github.io/Scriptable/"><img src="https://img.shields.io/badge/Web-Katalog-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Scriptable katalog" /></a> <a href="https://github.com/CaseyCZ/Scriptable"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="Scriptable GitHub" /></a></td></tr>
-    <tr><td><strong>iOS Hub</strong></td><td>—</td><td>Živý katalog iOS zdrojů, dvojité filtry, Source Builder a lokální DEB → IPA převodník.</td><td><a href="https://caseycz.github.io/iOS-Hub/"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="iOS Hub web" /></a> <a href="https://github.com/CaseyCZ/iOS-Hub"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="iOS Hub GitHub" /></a></td></tr>
-    <tr><td><strong>Travel Checklist</strong></td><td><code>web</code></td><td>Pomocník na cesty se seznamy, šablonami, tiskem a sdílením.</td><td><a href="https://caseycz.github.io/Checklist.html"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Travel Checklist web" /></a> <a href="https://github.com/CaseyCZ/CaseyCZ.github.io"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="Website GitHub" /></a></td></tr>
-    <tr><td><strong>Stremio Sosáč</strong></td><td><code>v0.4.5</code></td><td>Katalogy, metadata a video streamy pro Stremio.</td><td><a href="https://130.61.49.108/configure"><img src="https://img.shields.io/badge/Konfigurace-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Stremio Sosáč konfigurace" /></a> <a href="https://github.com/CaseyCZ/stremio.sosac"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="Stremio Sosáč GitHub" /></a></td></tr>
-    <tr><td><strong>Sosáč Subtitles</strong></td><td><code>v2.9.8</code></td><td>Samostatný Stremio addon pro titulky.</td><td><a href="https://130.61.49.108:8443/configure"><img src="https://img.shields.io/badge/Konfigurace-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Sosáč Subtitles konfigurace" /></a> <a href="https://github.com/CaseyCZ/stremio.sosac.subtitles"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="Sosáč Subtitles GitHub" /></a></td></tr>
+    <tr>
+      <td><strong>HB Control</strong></td>
+      <td><code>1.0 · build 17</code></td>
+      <td>Nativní iOS/iPadOS aplikace pro správu Homebridge — Dashboard, pluginy, aktualizace, Child Bridges, logy, zálohy, konfigurace, diagnostika a Apple Home pairing.</td>
+      <td><img src="https://img.shields.io/badge/App%20Store-p%C5%99ipraveno%20k%20vyd%C3%A1n%C3%AD-38BDF8?style=flat-square&labelColor=0284C7&logo=apple&logoColor=white" alt="HB Control App Store" /></td>
+    </tr>
+    <tr>
+      <td><strong>PiTV</strong></td>
+      <td><code>Alpha</code></td>
+      <td>TV prostředí pro Raspberry Pi nad Ubuntu Serverem s HDMI-CEC, PiTV Store, Server Store, Waydroidem a 24/7 serverovými službami.</td>
+      <td><a href="https://github.com/CaseyCZ/PiTV"><img src="https://img.shields.io/badge/GitHub-PiTV-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="PiTV GitHub" /></a></td>
+    </tr>
+    <tr>
+      <td><strong>TubeTV</strong></td>
+      <td><code>aktivní vývoj</code></td>
+      <td>Nativní YouTube klient pro Apple TV / tvOS s TV-first rozhraním, účtem, playlisty, titulky, překladem, volbou kvality, 4K/HDR a ovládáním Apple TV Remote.</td>
+      <td><a href="https://github.com/CaseyCZ/TubeTV"><img src="https://img.shields.io/badge/GitHub-TubeTV-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="TubeTV GitHub" /></a></td>
+    </tr>
+    <tr>
+      <td><strong>CorePilot</strong></td>
+      <td><code>aktivní vývoj</code></td>
+      <td>Hardware-aware nástroj pro Windows, který ověří cílový počítač, připraví instalační médium a bezpečně zapisuje Windows, Linux nebo podporované macOS/OpenCore konfigurace.</td>
+      <td><a href="https://github.com/CaseyCZ/CorePilot/releases/latest"><img src="https://img.shields.io/badge/St%C3%A1hnout-Latest-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="CorePilot Latest" /></a> <a href="https://github.com/CaseyCZ/CorePilot"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="CorePilot GitHub" /></a></td>
+    </tr>
+    <tr>
+      <td><strong>GameS Calendar</strong></td>
+      <td><code>v3.12.27</code></td>
+      <td>Herní kalendář a vyhledávač s IGDB, platformami, oblíbenými hrami, odpočtem, detaily a přidáním vydání do kalendáře.</td>
+      <td><a href="https://caseycz.github.io/GameS-Calendar-Website/"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="GameS web" /></a> <a href="https://github.com/CaseyCZ/GameS-Calendar-Website"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GameS GitHub" /></a></td>
+    </tr>
+    <tr>
+      <td><strong>iOS Hub</strong></td>
+      <td><code>web</code></td>
+      <td>Živý katalog AltStore / SideStore / LiveContainer zdrojů, Source Builder, Help Center a lokální DEB → IPA převodník.</td>
+      <td><a href="https://caseycz.github.io/iOS-Hub/"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="iOS Hub web" /></a> <a href="https://github.com/CaseyCZ/iOS-Hub"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="iOS Hub GitHub" /></a></td>
+    </tr>
+    <tr>
+      <td><strong>Scriptable Apps</strong></td>
+      <td><code>více aplikací</code></td>
+      <td>Widgety a nástroje pro iPhone — LockScreen Generator <code>v2.10.0</code>, Sports Info <code>v2.5.30</code> a připravovaný Sports Live.</td>
+      <td><a href="https://caseycz.github.io/Scriptable/"><img src="https://img.shields.io/badge/Web-Katalog-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Scriptable katalog" /></a> <a href="https://github.com/CaseyCZ/Scriptable"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="Scriptable GitHub" /></a></td>
+    </tr>
+    <tr>
+      <td><strong>iOS IPA Builder</strong></td>
+      <td><code>GitHub Actions</code></td>
+      <td>Builder pro čisté unsigned IPA i podepsané App Store/TestFlight IPA bez lokálního Macu. Podporuje Native Xcode, Capacitor, Flutter a React Native.</td>
+      <td><a href="https://caseycz.github.io/iOS-IPA-Builder/"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="iOS IPA Builder web" /></a> <a href="https://github.com/CaseyCZ/iOS-IPA-Builder"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="iOS IPA Builder GitHub" /></a></td>
+    </tr>
+    <tr>
+      <td><strong>Stremio Sosáč</strong></td>
+      <td><code>v0.5.1</code></td>
+      <td>Stremio addon s katalogy, metadata a video streamy; titulky používají kompatibilní Hybrid režim a samostatný Direct test.</td>
+      <td><a href="https://130.61.49.108/configure"><img src="https://img.shields.io/badge/Konfigurace-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Stremio Sosáč konfigurace" /></a> <a href="https://github.com/CaseyCZ/stremio.sosac"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="Stremio Sosáč GitHub" /></a></td>
+    </tr>
+    <tr>
+      <td><strong>Sosáč Subtitles</strong></td>
+      <td><code>v3.0.0</code></td>
+      <td>Samostatný Stremio addon pro titulky ze Sosáč a Streamuj.tv, včetně Apple-kompatibilního fallbacku.</td>
+      <td><a href="https://130.61.49.108:8443/configure"><img src="https://img.shields.io/badge/Konfigurace-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Sosáč Subtitles konfigurace" /></a> <a href="https://github.com/CaseyCZ/stremio.sosac.subtitles"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="Sosáč Subtitles GitHub" /></a></td>
+    </tr>
+    <tr>
+      <td><strong>Travel Checklist</strong></td>
+      <td><code>web</code></td>
+      <td>Pomocník na cesty se seznamy, šablonami, tiskem a sdílením.</td>
+      <td><a href="https://caseycz.github.io/Checklist.html"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Travel Checklist web" /></a> <a href="https://github.com/CaseyCZ/CaseyCZ.github.io"><img src="https://img.shields.io/badge/GitHub-Web-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="Website GitHub" /></a></td>
+    </tr>
   </tbody>
 </table>
 
+## Zaměření
+
+- 🍎 **iOS / iPadOS / tvOS** — Swift, SwiftUI, nativní Apple aplikace
+- 🏠 **Homebridge & smart home** — správa serveru, pluginy, automatizace a diagnostika
+- 📺 **Raspberry Pi & Linux** — TV prostředí, servery, Wayland, Waydroid, HDMI-CEC
+- 🪟 **Windows & instalační nástroje** — .NET, PowerShell, bezpečné USB workflow
+- ⚙️ **GitHub Actions** — automatické buildy, release workflow, kontroly a deployment
+- 🌐 **Web & Node.js** — katalogy, API, Stremio addony a praktické webové nástroje
+
 ## O mně
 
-Jsem **CaseyCZ**. Profesně se dlouhodobě pohybuji v plánování výroby a SAPu. Ve vlastních projektech se zaměřuji hlavně na praktické aplikace, automatizaci a nástroje, které řeší konkrétní potřebu.
+Jsem **Lukáš Kysela / CaseyCZ**. Profesně se dlouhodobě pohybuji v plánování výroby a SAPu. Ve vlastních projektech se zaměřuji hlavně na praktické aplikace, automatizaci a nástroje, které řeší konkrétní potřebu.
 
 ## Aktivita na GitHubu
 

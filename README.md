@@ -33,7 +33,7 @@
 
 ## O mně
 
-Jsem **Lukáš Kysela / CaseyCZ**. Profesně se dlouhodobě pohybuji v plánování výroby a SAPu. Ve vlastních projektech se zaměřuji hlavně na praktické aplikace, automatizaci a nástroje, které řeší konkrétní potřebu.
+Jsem **CaseyCZ**. Profesně se dlouhodobě pohybuji v plánování výroby a SAPu. Ve vlastních projektech se zaměřuji hlavně na praktické aplikace, automatizaci a nástroje, které řeší konkrétní potřebu.
 
 ## Aktivita na GitHubu
 

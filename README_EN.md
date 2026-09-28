@@ -55,7 +55,7 @@
       <td><strong>GameS Calendar</strong></td>
       <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.games&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=300" alt="GameS Calendar version" /></td>
       <td>Game release calendar and search with IGDB, platform filters, favorites, countdowns, game details and calendar export.</td>
-      <td><a href="https://caseycz.github.io/GameS-Calendar-Website/"><img src="https://img.shields.io/badge/Web-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="GameS web" /></a> <a href="https://github.com/CaseyCZ/GameS-Calendar-Website"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GameS GitHub" /></a></td>
+      <td><a href="https://130.61.49.108/games/"><img src="https://img.shields.io/badge/Web-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="GameS web" /></a> <a href="https://github.com/CaseyCZ/GameS-Calendar-Website"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GameS GitHub" /></a></td>
     </tr>
     <tr>
       <td><strong>iOS Hub</strong></td>

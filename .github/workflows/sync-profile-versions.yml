@@ -2,6 +2,12 @@ name: Sync profile versions
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - Master
+    paths:
+      - ".github/workflows/sync-profile-versions.yml"
+      - "scripts/sync_versions.py"
   schedule:
     - cron: "17 */6 * * *"
 

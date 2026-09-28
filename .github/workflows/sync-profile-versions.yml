@@ -1,0 +1,39 @@
+name: Sync profile versions
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-profile-versions
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout profile repository
+        uses: actions/checkout@v4
+
+      - name: Read current project versions
+        env:
+          HB_CONTROL_TOKEN: ${{ secrets.HB_CONTROL_TOKEN }}
+        run: python3 scripts/sync_versions.py
+
+      - name: Commit changed versions
+        shell: bash
+        run: |
+          if git diff --quiet -- versions.json; then
+            echo "Versions are already current."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add versions.json
+          git commit -m "Update profile project versions"
+          git push

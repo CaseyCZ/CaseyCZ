@@ -29,13 +29,13 @@
   <tbody>
     <tr>
       <td><strong>HB Control</strong></td>
-      <td><code>1.0 · build 17</code></td>
+      <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.hb_control.display&label=verze&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=300" alt="HB Control verze" /></td>
       <td>Nativní iOS/iPadOS aplikace pro správu Homebridge — Dashboard, pluginy, aktualizace, Child Bridges, logy, zálohy, konfigurace, diagnostika a Apple Home pairing.</td>
       <td><img src="https://img.shields.io/badge/App%20Store-p%C5%99ipraveno%20k%20vyd%C3%A1n%C3%AD-38BDF8?style=flat-square&labelColor=0284C7&logo=apple&logoColor=white" alt="HB Control App Store" /></td>
     </tr>
     <tr>
       <td><strong>PiTV</strong></td>
-      <td><code>Alpha</code></td>
+      <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.pitv&label=verze&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=300" alt="PiTV verze" /> <img src="https://img.shields.io/badge/kan%C3%A1l-Alpha-172033?style=flat-square&labelColor=111827" alt="PiTV Alpha" /></td>
       <td>TV prostředí pro Raspberry Pi nad Ubuntu Serverem s HDMI-CEC, PiTV Store, Server Store, Waydroidem a 24/7 serverovými službami.</td>
       <td><a href="https://github.com/CaseyCZ/PiTV"><img src="https://img.shields.io/badge/GitHub-PiTV-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="PiTV GitHub" /></a></td>
     </tr>
@@ -53,7 +53,7 @@
     </tr>
     <tr>
       <td><strong>GameS Calendar</strong></td>
-      <td><code>v3.12.27</code></td>
+      <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.games&label=verze&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=300" alt="GameS Calendar verze" /></td>
       <td>Herní kalendář a vyhledávač s IGDB, platformami, oblíbenými hrami, odpočtem, detaily a přidáním vydání do kalendáře.</td>
       <td><a href="https://caseycz.github.io/GameS-Calendar-Website/"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="GameS web" /></a> <a href="https://github.com/CaseyCZ/GameS-Calendar-Website"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GameS GitHub" /></a></td>
     </tr>
@@ -65,8 +65,8 @@
     </tr>
     <tr>
       <td><strong>Scriptable Apps</strong></td>
-      <td><code>více aplikací</code></td>
-      <td>Widgety a nástroje pro iPhone — LockScreen Generator <code>v2.10.0</code>, Sports Info <code>v2.5.30</code> a připravovaný Sports Live.</td>
+      <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.lockscreen&label=LockScreen&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=300" alt="LockScreen Generator verze" /> <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.sports_info&label=Sports%20Info&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=300" alt="Sports Info verze" /></td>
+      <td>Widgety a nástroje pro iPhone — LockScreen Generator, Sports Info a připravovaný Sports Live.</td>
       <td><a href="https://caseycz.github.io/Scriptable/"><img src="https://img.shields.io/badge/Web-Katalog-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Scriptable katalog" /></a> <a href="https://github.com/CaseyCZ/Scriptable"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="Scriptable GitHub" /></a></td>
     </tr>
     <tr>
@@ -77,13 +77,13 @@
     </tr>
     <tr>
       <td><strong>Stremio Sosáč</strong></td>
-      <td><code>v0.5.1</code></td>
+      <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.stremio_sosac&label=verze&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=300" alt="Stremio Sosáč verze" /></td>
       <td>Stremio addon s katalogy, metadata a video streamy; titulky používají kompatibilní Hybrid režim a samostatný Direct test.</td>
       <td><a href="https://130.61.49.108/configure"><img src="https://img.shields.io/badge/Konfigurace-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Stremio Sosáč konfigurace" /></a> <a href="https://github.com/CaseyCZ/stremio.sosac"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="Stremio Sosáč GitHub" /></a></td>
     </tr>
     <tr>
       <td><strong>Sosáč Subtitles</strong></td>
-      <td><code>v3.0.0</code></td>
+      <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.sosac_subtitles&label=verze&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=300" alt="Sosáč Subtitles verze" /></td>
       <td>Samostatný Stremio addon pro titulky ze Sosáč a Streamuj.tv, včetně Apple-kompatibilního fallbacku.</td>
       <td><a href="https://130.61.49.108:8443/configure"><img src="https://img.shields.io/badge/Konfigurace-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Sosáč Subtitles konfigurace" /></a> <a href="https://github.com/CaseyCZ/stremio.sosac.subtitles"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="Sosáč Subtitles GitHub" /></a></td>
     </tr>

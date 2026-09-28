@@ -1,0 +1,13 @@
+{
+  "hb_control": {
+    "version": "1.0",
+    "build": 17,
+    "display": "1.0 · build 17"
+  },
+  "pitv": "1.5.0",
+  "games": "3.12.27",
+  "lockscreen": "2.10.2",
+  "sports_info": "2.5.30",
+  "stremio_sosac": "0.5.1",
+  "sosac_subtitles": "3.0.0"
+}

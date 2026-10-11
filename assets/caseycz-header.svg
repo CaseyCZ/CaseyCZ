@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-label="CaseyCZ — apps, tools and projects">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#070b14"/>
+      <stop offset="1" stop-color="#0b1020"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="170" y1="70" x2="980" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0284c7"/>
+      <stop offset="1" stop-color="#38bdf8"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="translate(940 62) rotate(135) scale(440 300)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#172554" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#070b14" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="360" rx="30" fill="url(#bg)"/>
+  <rect width="1200" height="360" rx="30" fill="url(#glow)"/>
+  <rect x="54" y="54" width="74" height="74" rx="22" fill="url(#accent)"/>
+  <text x="91" y="105" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="38" font-weight="800" fill="#fff">C</text>
+  <rect x="54" y="153" width="180" height="34" rx="17" fill="#0f2b45" stroke="#1e5d82"/>
+  <circle cx="75" cy="170" r="4" fill="#86efac"/>
+  <text x="91" y="175" font-family="Segoe UI,Arial,sans-serif" font-size="12" font-weight="800" letter-spacing="1.4" fill="#38bdf8">ACTIVE DEVELOPMENT</text>
+  <text x="54" y="246" font-family="Segoe UI,Arial,sans-serif" font-size="78" font-weight="800" letter-spacing="-3" fill="#f8fafc">CaseyCZ</text>
+  <text x="58" y="286" font-family="Segoe UI,Arial,sans-serif" font-size="24" font-weight="600" fill="#38bdf8">Apps · tools · projects</text>
+  <text x="58" y="318" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="#94a3b8">by Lukáš Kysela</text>
+  <g font-family="Segoe UI,Arial,sans-serif" font-size="14" font-weight="700">
+    <rect x="734" y="150" width="150" height="46" rx="14" fill="#111827" stroke="#2a3850"/><text x="809" y="179" text-anchor="middle" fill="#f8fafc">Homebridge</text>
+    <rect x="900" y="150" width="112" height="46" rx="14" fill="#111827" stroke="#2a3850"/><text x="956" y="179" text-anchor="middle" fill="#f8fafc">GameS</text>
+    <rect x="1028" y="150" width="118" height="46" rx="14" fill="#111827" stroke="#2a3850"/><text x="1087" y="179" text-anchor="middle" fill="#f8fafc">Scriptable</text>
+    <rect x="780" y="212" width="148" height="46" rx="14" fill="#111827" stroke="#2a3850"/><text x="854" y="241" text-anchor="middle" fill="#f8fafc">Automation</text>
+    <rect x="944" y="212" width="128" height="46" rx="14" fill="#111827" stroke="#2a3850"/><text x="1008" y="241" text-anchor="middle" fill="#f8fafc">Raspberry Pi</text>
+  </g>
+</svg>

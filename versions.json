@@ -9,5 +9,11 @@
   "lockscreen": "2.10.2",
   "sports_info": "2.5.41",
   "stremio_sosac": "0.5.2",
-  "sosac_subtitles": "3.0.1"
+  "sosac_subtitles": "3.0.1",
+  "tube_tv": "1.0.0",
+  "stremio_addons": "0.2.1",
+  "sports_live": "0.3.3",
+  "piskvorky": "1.1.0",
+  "breakout": "1.2.0",
+  "pong": "1.1.0"
 }

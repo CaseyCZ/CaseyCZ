@@ -40,6 +40,28 @@ def readme_badge_version(repo, branch, path):
     return match.group(1)
 
 
+
+def release_badge_version(repo, branch, path):
+    url = f"https://raw.githubusercontent.com/{repo}/{branch}/{path}"
+    text = fetch_text(url)
+    match = re.search(r"RELEASE-v([0-9]+(?:\.[0-9]+)+)", text)
+    if not match:
+        raise RuntimeError(f"Release badge not found in {repo}/{path}")
+    return match.group(1)
+
+
+def optional_version(key, source, current):
+    """Keep the previous valid version if a new public source is temporarily offline."""
+    try:
+        value = str(source())
+        if not re.fullmatch(r"[0-9]+(?:\.[0-9]+)+", value):
+            raise ValueError(f"Unexpected version format: {value}")
+        return value
+    except (OSError, ValueError, RuntimeError, KeyError, TimeoutError) as exc:
+        print(f"{key}: {exc}; keeping previous value {current}")
+        return current
+
+
 def pitv_version():
     text = fetch_text(
         "https://raw.githubusercontent.com/CaseyCZ/PiTV/Master/pitv/pitv.py"
@@ -86,6 +108,44 @@ def main():
         "stremio_sosac": package_version("CaseyCZ/stremio.sosac", "Master"),
         "sosac_subtitles": package_version(
             "CaseyCZ/stremio.sosac.subtitles", "Master"
+        ),
+        "tube_tv": optional_version(
+            "tube_tv",
+            lambda: release_badge_version("CaseyCZ/TubeTV", "Master", "README.md"),
+            current.get("tube_tv", "1.0.0"),
+        ),
+        "stremio_addons": optional_version(
+            "stremio_addons",
+            lambda: package_version("CaseyCZ/stremio.addons", "Master"),
+            current.get("stremio_addons", "0.2.1"),
+        ),
+        "sports_live": optional_version(
+            "sports_live",
+            lambda: readme_badge_version(
+                "CaseyCZ/Scriptable", "Master", "apps/Sports-Live/README.md"
+            ),
+            current.get("sports_live", "0.3.3"),
+        ),
+        "piskvorky": optional_version(
+            "piskvorky",
+            lambda: readme_badge_version(
+                "CaseyCZ/Scriptable", "Master", "apps/Piskvorky-Deluxe/README.md"
+            ),
+            current.get("piskvorky", "1.1.0"),
+        ),
+        "breakout": optional_version(
+            "breakout",
+            lambda: readme_badge_version(
+                "CaseyCZ/Scriptable", "Master", "apps/Breakout-Deluxe/README.md"
+            ),
+            current.get("breakout", "1.2.0"),
+        ),
+        "pong": optional_version(
+            "pong",
+            lambda: readme_badge_version(
+                "CaseyCZ/Scriptable", "Master", "apps/Pong-Fotbal/README.md"
+            ),
+            current.get("pong", "1.1.0"),
         ),
     }
 

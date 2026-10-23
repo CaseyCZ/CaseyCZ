@@ -9,7 +9,7 @@ on:
       - ".github/workflows/sync-profile-versions.yml"
       - "scripts/sync_versions.py"
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "17 5 * * *"
 
 permissions:
   contents: write

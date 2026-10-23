@@ -24,86 +24,86 @@
 
 ## Current projects
 
-<table>
-  <thead><tr><th>Project</th><th>Status / version</th><th>Info</th><th>Links</th></tr></thead>
+<table width="100%">
+  <thead><tr><th width="18%" align="left">Project</th><th width="21%" align="left">Status / version</th><th width="34%" align="left">Info</th><th width="27%" align="left">Links</th></tr></thead>
   <tbody>
     <tr>
-      <td><strong>HB Control</strong></td>
-      <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.hb_control&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" /></td>
-      <td>Homebridge management for iPhone and iPad.</td>
-      <td><a href="https://130.61.49.108/hb-control/"><img src="https://img.shields.io/badge/Web-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Open" /></a> <a href="https://github.com/CaseyCZ/HB-Control"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
+<td width="18%" align="left" valign="middle"><strong>HB Control</strong></td>
+      <td width="21%" align="left" valign="middle"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.hb_control.display&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" /></td>
+      <td width="34%" align="left" valign="middle">Homebridge for iPhone and iPad.</td>
+      <td width="27%" align="left" valign="middle"><a href="https://130.61.49.108/hb-control/"><img src="https://img.shields.io/badge/Web-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Open" /></a>&nbsp;<a href="https://github.com/CaseyCZ/HB-Control"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
     <tr>
-      <td><strong>PiTV</strong></td>
-      <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.pitv&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" /> <img src="https://img.shields.io/badge/channel-Alpha-172033?style=flat-square&labelColor=111827" alt="Alpha" /></td>
-      <td>Raspberry Pi TV system with Waydroid.</td>
-      <td><a href="https://github.com/CaseyCZ/PiTV"><img src="https://img.shields.io/badge/GitHub-PiTV-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="GitHub PiTV" /></a></td>
+<td width="18%" align="left" valign="middle"><strong>PiTV</strong></td>
+      <td width="21%" align="left" valign="middle"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.pitv&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" />&nbsp;<img src="https://img.shields.io/badge/channel-Alpha-172033?style=flat-square&labelColor=111827" alt="Alpha" /></td>
+      <td width="34%" align="left" valign="middle">Raspberry Pi TV system with Waydroid.</td>
+      <td width="27%" align="left" valign="middle"><a href="https://github.com/CaseyCZ/PiTV"><img src="https://img.shields.io/badge/GitHub-PiTV-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="GitHub PiTV" /></a></td>
     </tr>
     <tr>
-      <td><strong>TubeTV</strong></td>
-      <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.tube_tv&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" /></td>
-      <td>Apple TV YouTube with TizenTube.</td>
-      <td><a href="https://github.com/CaseyCZ/TubeTV/releases/tag/v1.0.0"><img src="https://img.shields.io/badge/Download-Stable-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="Download Stable" /></a> <a href="https://github.com/CaseyCZ/TubeTV"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
+<td width="18%" align="left" valign="middle"><strong>TubeTV</strong></td>
+      <td width="21%" align="left" valign="middle"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.tube_tv&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" /></td>
+      <td width="34%" align="left" valign="middle">Apple TV YouTube with TizenTube.</td>
+      <td width="27%" align="left" valign="middle"><a href="https://github.com/CaseyCZ/TubeTV/releases/tag/v1.0.0"><img src="https://img.shields.io/badge/IPA-Stable-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="Download Stable" /></a>&nbsp;<a href="https://github.com/CaseyCZ/TubeTV"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
     <tr>
-      <td><strong>CorePilot</strong></td>
-      <td><code>development</code></td>
-      <td>Windows, Linux and macOS boot media creator.</td>
-      <td><a href="https://github.com/CaseyCZ/CorePilot/releases/latest"><img src="https://img.shields.io/badge/Download-Latest-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="Download Latest" /></a> <a href="https://github.com/CaseyCZ/CorePilot"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
+<td width="18%" align="left" valign="middle"><strong>CorePilot</strong></td>
+      <td width="21%" align="left" valign="middle"><code>development</code></td>
+      <td width="34%" align="left" valign="middle">Installer for Windows, Linux and macOS.</td>
+      <td width="27%" align="left" valign="middle"><a href="https://github.com/CaseyCZ/CorePilot/releases/latest"><img src="https://img.shields.io/badge/ZIP-Latest-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="Download Latest" /></a>&nbsp;<a href="https://github.com/CaseyCZ/CorePilot"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
     <tr>
-      <td><strong>GameS Calendar</strong></td>
-      <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.games&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" /></td>
-      <td>Game release calendar powered by IGDB.</td>
-      <td><a href="https://130.61.49.108/games/"><img src="https://img.shields.io/badge/Web-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Open" /></a> <a href="https://github.com/CaseyCZ/GameS-Calendar-Website"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
+<td width="18%" align="left" valign="middle"><strong>GameS&nbsp;Calendar</strong></td>
+      <td width="21%" align="left" valign="middle"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.games&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" /></td>
+      <td width="34%" align="left" valign="middle">Game release calendar powered by IGDB.</td>
+      <td width="27%" align="left" valign="middle"><a href="https://130.61.49.108/games/"><img src="https://img.shields.io/badge/Web-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Open" /></a>&nbsp;<a href="https://github.com/CaseyCZ/GameS-Calendar-Website"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
     <tr>
-      <td><strong>Abaku</strong></td>
-      <td><code>web</code></td>
-      <td>Math board game with AI and online matches.</td>
-      <td><a href="https://caseycz.github.io/Abaku/"><img src="https://img.shields.io/badge/Web-Play-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Play" /></a> <a href="https://github.com/CaseyCZ/Abaku"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
+<td width="18%" align="left" valign="middle"><strong>Abaku</strong></td>
+      <td width="21%" align="left" valign="middle"><code>web</code></td>
+      <td width="34%" align="left" valign="middle">Math game with AI and online play.</td>
+      <td width="27%" align="left" valign="middle"><a href="https://caseycz.github.io/Abaku/"><img src="https://img.shields.io/badge/Web-Play-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Play" /></a>&nbsp;<a href="https://github.com/CaseyCZ/Abaku"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
     <tr>
-      <td><strong>iOS Hub</strong></td>
-      <td><code>web</code></td>
-      <td>AltStore, FlareStore, Feather and Shortcut imports.</td>
-      <td><a href="https://caseycz.github.io/iOS-Hub/"><img src="https://img.shields.io/badge/Web-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Open" /></a> <a href="https://github.com/CaseyCZ/iOS-Hub"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
+<td width="18%" align="left" valign="middle"><strong>iOS Hub</strong></td>
+      <td width="21%" align="left" valign="middle"><code>web</code></td>
+      <td width="34%" align="left" valign="middle">AltStore, Feather, FlareStore, Shortcuts.</td>
+      <td width="27%" align="left" valign="middle"><a href="https://caseycz.github.io/iOS-Hub/"><img src="https://img.shields.io/badge/Web-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Open" /></a>&nbsp;<a href="https://github.com/CaseyCZ/iOS-Hub"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
     <tr>
-      <td><strong>Scriptable Apps</strong></td>
-      <td><img src="https://img.shields.io/badge/collection-9%20apps-38BDF8?style=flat-square&labelColor=0284C7" alt="9 Scriptable apps" /></td>
-      <td>Widgets and games: Tic-tac-toe, Breakout, Pong.</td>
-      <td><a href="https://caseycz.github.io/Scriptable/"><img src="https://img.shields.io/badge/Web-Catalog-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Catalog" /></a> <a href="https://github.com/CaseyCZ/Scriptable"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
+<td width="18%" align="left" valign="middle"><strong>Scriptable&nbsp;Apps</strong></td>
+      <td width="21%" align="left" valign="middle"><img src="https://img.shields.io/badge/collection-9%20apps-38BDF8?style=flat-square&labelColor=0284C7" alt="9 Scriptable apps" /></td>
+      <td width="34%" align="left" valign="middle">Widgets, Tic-tac-toe, Breakout and Pong.</td>
+      <td width="27%" align="left" valign="middle"><a href="https://caseycz.github.io/Scriptable/"><img src="https://img.shields.io/badge/Web-Catalog-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Catalog" /></a>&nbsp;<a href="https://github.com/CaseyCZ/Scriptable"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
     <tr>
-      <td><strong>iOS IPA Builder</strong></td>
-      <td><code>GitHub Actions</code></td>
-      <td>Build IPA files via GitHub Actions, no Mac needed.</td>
-      <td><a href="https://caseycz.github.io/iOS-IPA-Builder/"><img src="https://img.shields.io/badge/Web-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Open" /></a> <a href="https://github.com/CaseyCZ/iOS-IPA-Builder"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
+<td width="18%" align="left" valign="middle"><strong>iOS&nbsp;IPA&nbsp;Builder</strong></td>
+      <td width="21%" align="left" valign="middle"><code>GitHub Actions</code></td>
+      <td width="34%" align="left" valign="middle">IPA builds via GitHub Actions.</td>
+      <td width="27%" align="left" valign="middle"><a href="https://caseycz.github.io/iOS-IPA-Builder/"><img src="https://img.shields.io/badge/Web-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Open" /></a>&nbsp;<a href="https://github.com/CaseyCZ/iOS-IPA-Builder"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
     <tr>
-      <td><strong>Stremio Sosáč</strong></td>
-      <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.stremio_sosac&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" /></td>
-      <td>Stremio catalogs and streaming add-on.</td>
-      <td><a href="https://130.61.49.108/configure"><img src="https://img.shields.io/badge/Configure-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Configure Open" /></a> <a href="https://github.com/CaseyCZ/stremio.sosac"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
+<td width="18%" align="left" valign="middle"><strong>Stremio&nbsp;Sosáč</strong></td>
+      <td width="21%" align="left" valign="middle"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.stremio_sosac&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" /></td>
+      <td width="34%" align="left" valign="middle">Stremio catalogs and streaming add-on.</td>
+      <td width="27%" align="left" valign="middle"><a href="https://130.61.49.108/configure"><img src="https://img.shields.io/badge/Web-Configure-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Configure Open" /></a>&nbsp;<a href="https://github.com/CaseyCZ/stremio.sosac"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
     <tr>
-      <td><strong>Sosáč Subtitles</strong></td>
-      <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.sosac_subtitles&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" /></td>
-      <td>Stremio subtitles with Apple fallback.</td>
-      <td><a href="https://130.61.49.108:8443/configure"><img src="https://img.shields.io/badge/Configure-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Configure Open" /></a> <a href="https://github.com/CaseyCZ/stremio.sosac.subtitles"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
+<td width="18%" align="left" valign="middle"><strong>Sosáč&nbsp;Subtitles</strong></td>
+      <td width="21%" align="left" valign="middle"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.sosac_subtitles&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" /></td>
+      <td width="34%" align="left" valign="middle">Subtitles for Stremio and Apple.</td>
+      <td width="27%" align="left" valign="middle"><a href="https://130.61.49.108:8443/configure"><img src="https://img.shields.io/badge/Web-Configure-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Configure Open" /></a>&nbsp;<a href="https://github.com/CaseyCZ/stremio.sosac.subtitles"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
     <tr>
-      <td><strong>Stremio Addons</strong></td>
-      <td><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.stremio_addons&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" /></td>
-      <td>Four independent Stremio source add-ons.</td>
-      <td><a href="https://github.com/CaseyCZ/stremio.addons"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
+<td width="18%" align="left" valign="middle"><strong>Stremio&nbsp;Addons</strong></td>
+      <td width="21%" align="left" valign="middle"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FCaseyCZ%2FCaseyCZ%2FMaster%2Fversions.json&query=%24.stremio_addons&label=version&color=38BDF8&labelColor=0284C7&style=flat-square&cacheSeconds=3600" alt="version" /></td>
+      <td width="34%" align="left" valign="middle">Four independent Stremio source add-ons.</td>
+      <td width="27%" align="left" valign="middle"><a href="https://github.com/CaseyCZ/stremio.addons"><img src="https://img.shields.io/badge/GitHub-Repo-38BDF8?style=flat-square&labelColor=0284C7&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
     <tr>
-      <td><strong>Travel Checklist</strong></td>
-      <td><code>web</code></td>
-      <td>Travel lists, templates and sharing.</td>
-      <td><a href="https://caseycz.github.io/Checklist.html"><img src="https://img.shields.io/badge/Web-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Open" /></a> <a href="https://github.com/CaseyCZ/CaseyCZ.github.io"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
+<td width="18%" align="left" valign="middle"><strong>Travel Checklist</strong></td>
+      <td width="21%" align="left" valign="middle"><code>web</code></td>
+      <td width="34%" align="left" valign="middle">Travel lists, templates and sharing.</td>
+      <td width="27%" align="left" valign="middle"><a href="https://caseycz.github.io/Checklist.html"><img src="https://img.shields.io/badge/Web-Open-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Open" /></a>&nbsp;<a href="https://github.com/CaseyCZ/CaseyCZ.github.io"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
   </tbody>
 </table>

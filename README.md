@@ -58,10 +58,10 @@
       <td width="27%" align="left" valign="middle"><a href="https://130.61.49.108/games/"><img src="https://img.shields.io/badge/Web-Otev%C5%99%C3%ADt-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Otevřít" /></a>&nbsp;<a href="https://github.com/CaseyCZ/GameS-Calendar-Website"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
     <tr>
-<td width="18%" align="left" valign="middle"><strong>Abaku</strong></td>
+<td width="18%" align="left" valign="middle"><strong>Číselná aréna</strong></td>
       <td width="21%" align="left" valign="middle"><code>web</code></td>
       <td width="34%" align="left" valign="middle">Číselná hra s AI a online režimem.</td>
-      <td width="27%" align="left" valign="middle"><a href="https://caseycz.github.io/Abaku/"><img src="https://img.shields.io/badge/Web-Hr%C3%A1t-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Hrát" /></a>&nbsp;<a href="https://github.com/CaseyCZ/Abaku"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
+      <td width="27%" align="left" valign="middle"><a href="https://caseycz.github.io/Ciselna-Arena/"><img src="https://img.shields.io/badge/Web-Hr%C3%A1t-38BDF8?style=flat-square&labelColor=0284C7&logo=googlechrome&logoColor=white" alt="Web Hrát" /></a>&nbsp;<a href="https://github.com/CaseyCZ/Ciselna-Arena"><img src="https://img.shields.io/badge/GitHub-Repo-172033?style=flat-square&labelColor=111827&logo=github&logoColor=white" alt="GitHub Repo" /></a></td>
     </tr>
     <tr>
 <td width="18%" align="left" valign="middle"><strong>iOS Hub</strong></td>
